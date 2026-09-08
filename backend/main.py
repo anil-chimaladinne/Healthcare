@@ -17,19 +17,17 @@ from backend.routers import (
     auth, dashboard, patients, triage, consultations, referrals, followups, sync, inventory
 )
 
-# Startup / Lifespan handler
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    # Initialize SQLite database schema and seed demo records
+# Initialize SQLite database schema and seed demo records safely
+try:
     init_db()
-    yield
+except Exception as e:
+    print("Database initialization notice:", e)
 
 
 app = FastAPI(
     title="SevaHealth API",
     description="Offline-First Smart Healthcare for Rural India - SIH 2026 Hackathon Prototype",
-    version="1.0.0",
-    lifespan=lifespan
+    version="1.0.0"
 )
 
 # Enable CORS for local and PWA development
