@@ -1,0 +1,11 @@
+name: healthcare-app
+type: web
+regions:
+  - fra
+build:
+  type: docker
+  dockerfile: Dockerfile
+ports:
+  - port: 8000
+    path: /
+    protocol: http
