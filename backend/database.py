@@ -4,17 +4,25 @@ SQLite database schema supporting longitudinal patient EHR, triage, consultation
 referrals, follow-ups, diagnostics, medicines, and demo users.
 """
 
+import os
 import sqlite3
 from pathlib import Path
 from datetime import datetime, timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-DB_FILE = BASE_DIR / "sevahealth.db"
+
+# In serverless environments like Vercel/AWS Lambda, only /tmp is writable
+if os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME") or not os.access(str(BASE_DIR), os.W_OK):
+    DB_FILE = Path("/tmp") / "sevahealth.db"
+else:
+    DB_FILE = BASE_DIR / "sevahealth.db"
 
 
 def get_db_connection() -> sqlite3.Connection:
     """Returns a SQLite connection with dict-like row access."""
-    conn = sqlite3.connect(DB_FILE, check_same_thread=False)
+    # Ensure parent directory exists
+    DB_FILE.parent.mkdir(parents=True, exist_ok=True)
+    conn = sqlite3.connect(str(DB_FILE), check_same_thread=False)
     conn.row_factory = sqlite3.Row
     return conn
 
