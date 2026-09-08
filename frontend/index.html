@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SevaHealth - Offline-First Smart Healthcare for Rural India</title>
+  <meta name="description" content="Connected care for rural patients, ASHA workers, PHCs and doctors—even with unreliable internet. SIH 2026 Prototype.">
+  <link rel="manifest" href="manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page-landing">
+
+  <!-- Top Navigation Header -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="index.html" class="brand">
+        <div class="brand-icon">✚</div>
+        <div class="brand-text">
+          <h1 data-i18n="app_title">SevaHealth</h1>
+          <span data-i18n="app_subtitle" style="font-size: 1rem; color: var(--primary-dark); font-weight: 700;">Offline-First Smart Healthcare</span>
+        </div>
+      </a>
+
+      <div class="header-controls">
+        <!-- Language Switcher -->
+        <select id="lang-select" class="form-select" style="min-height: 40px; padding: 4px 12px; width: auto; font-size: 0.95rem; font-weight: 600;">
+          <option value="en">English</option>
+          <option value="te">తెలుగు (Telugu)</option>
+        </select>
+
+        <a href="login.html" class="btn btn-outline btn-sm" data-i18n="sign_in">Sign In</a>
+        <a href="login.html" class="btn btn-primary btn-sm">Explore Prototype &rarr;</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main>
+    <section style="padding: 4.5rem 1.5rem 3.5rem; text-align: center; background: radial-gradient(circle at 50% 10%, rgba(204, 251, 241, 0.7) 0%, rgba(248, 250, 252, 0.4) 75%);">
+      <div style="max-width: 960px; margin: 0 auto;">
+
+        <h1 style="font-size: clamp(2.6rem, 5.8vw, 4.2rem); font-weight: 800; color: var(--slate-900); line-height: 1.15; margin-bottom: 1.35rem; letter-spacing: -0.025em;">
+          Offline-First Smart Healthcare for <span style="color: var(--primary); background: linear-gradient(135deg, var(--primary), #0284c7); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Rural India</span>
+        </h1>
+
+        <p style="font-size: 1.35rem; color: var(--slate-700); max-width: 820px; margin: 0 auto 2.5rem; line-height: 1.65; font-weight: 500;">
+          Connected care for rural patients, ASHA workers, PHCs and doctors—<strong style="color: var(--slate-900);">even with zero or unreliable internet.</strong>
+        </p>
+
+        <div style="display: flex; gap: 1.25rem; justify-content: center; flex-wrap: wrap; margin-bottom: 3rem;">
+          <a href="login.html" class="btn btn-primary" style="font-size: 1.15rem; padding: 0.9rem 2.25rem;">
+            Launch Prototype Portal &rarr;
+          </a>
+          <a href="#care-journey" class="btn btn-outline" style="font-size: 1.15rem; padding: 0.9rem 2.25rem;">
+            View Care Journey
+          </a>
+        </div>
+
+        <!-- Care Journey Visual Flow Diagram -->
+        <div id="care-journey" style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1.5px solid var(--slate-200); border-radius: var(--radius-lg); padding: 2rem 1.75rem; box-shadow: var(--shadow-md); margin-top: 2.25rem;">
+          <h3 style="font-size: 1.15rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--slate-600); margin-bottom: 1.25rem; font-weight: 800;">
+            🌟 Seamless Rural Care Journey (Continuous Loop)
+          </h3>
+
+          <div class="flow-diagram">
+            <div class="flow-step"><span>🏡</span> Doorstep Patient</div>
+            <div class="flow-arrow">&rarr;</div>
+            <div class="flow-step"><span>🩺</span> ASHA Worker (Offline)</div>
+            <div class="flow-arrow">&rarr;</div>
+            <div class="flow-step"><span style="color:var(--risk-red);">⚡</span> Smart Triage (Red/Yellow/Green)</div>
+            <div class="flow-arrow">&rarr;</div>
+            <div class="flow-step"><span>👨‍⚕️</span> PHC Doctor Tele-Consult</div>
+            <div class="flow-arrow">&rarr;</div>
+            <div class="flow-step"><span>🚑</span> Tracked Referral</div>
+            <div class="flow-arrow">&rarr;</div>
+            <div class="flow-step"><span>📋</span> Home Follow-up &amp; SMS</div>
+          </div>
+
+          <p style="font-size: 1.05rem; color: var(--primary-dark); font-weight: 700; margin-top: 1rem;">
+            &ldquo;Care continues even when the internet does not.&rdquo;
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Key Platform Innovations Grid -->
+    <section style="max-width: 1250px; margin: 0 auto; padding: 3.5rem 1.5rem 5.5rem;">
+      <div style="text-align: center; margin-bottom: 3rem;">
+        <h2 style="font-size: 2.15rem; font-weight: 800; color: var(--slate-900);">Platform Architecture &amp; Innovations</h2>
+        <p style="font-size: 1.15rem; color: var(--slate-600); margin-top: 0.5rem;">Lightweight, beginner-friendly full-stack architecture built for real frontline impact.</p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.75rem;">
+        
+        <div style="background: var(--white); padding: 1.75rem; border-radius: var(--radius-lg); border: 1.5px solid var(--slate-200); box-shadow: var(--shadow-sm);">
+          <div style="font-size: 2.25rem; margin-bottom: 0.85rem;">📴</div>
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.6rem; color: var(--slate-900);">Offline-First PWA &amp; IndexedDB</h3>
+          <p style="font-size: 1rem; color: var(--slate-600); line-height: 1.6;">Enables ASHA workers to register patients, capture vitals, and run smart triage in remote villages without connectivity, syncing automatically when back online.</p>
+        </div>
+
+        <div style="background: var(--white); padding: 1.75rem; border-radius: var(--radius-lg); border: 1.5px solid var(--slate-200); box-shadow: var(--shadow-sm);">
+          <div style="font-size: 2.25rem; margin-bottom: 0.85rem;">⚡</div>
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.6rem; color: var(--slate-900);">Rule-Based Smart Triage</h3>
+          <p style="font-size: 1rem; color: var(--slate-600); line-height: 1.6;">Transparent multi-parameter risk categorization (RED, YELLOW, GREEN) with automated routing to Emergency Attention, Priority Doctor Queue, or Routine Home Care.</p>
+        </div>
+
+        <div style="background: var(--white); padding: 1.75rem; border-radius: var(--radius-lg); border: 1.5px solid var(--slate-200); box-shadow: var(--shadow-sm);">
+          <div style="font-size: 2.25rem; margin-bottom: 0.85rem;">📜</div>
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.6rem; color: var(--slate-900);">Longitudinal EHR Timeline</h3>
+          <p style="font-size: 1rem; color: var(--slate-600); line-height: 1.6;">Complete care continuum records indexed under unique Patient IDs (SEVA-XXXXXX) with FHIR/ABDM-ready structured resource mapping.</p>
+        </div>
+
+        <div style="background: var(--white); padding: 1.75rem; border-radius: var(--radius-lg); border: 1.5px solid var(--slate-200); box-shadow: var(--shadow-sm);">
+          <div style="font-size: 2.25rem; margin-bottom: 0.85rem;">🗣️</div>
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.6rem; color: var(--slate-900);">Telugu / English &amp; Voice Input</h3>
+          <p style="font-size: 1rem; color: var(--slate-600); line-height: 1.6;">Frontline-friendly UI with instant Telugu localization and voice-to-text symptom intake using browser speech recognition.</p>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer style="background: var(--white); border-top: 1px solid var(--slate-200); padding: 1.5rem; text-align: center; font-size: 0.95rem; color: var(--slate-500); margin-top: auto;">
+    <p>&copy; 2026 <strong>SevaHealth</strong> &bull; Offline-First Smart Healthcare for Rural India</p>
+  </footer>
+
+  <script src="js/i18n.js"></script>
+</body>
+</html>

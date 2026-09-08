@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - SevaHealth</title>
+  <meta name="description" content="Operational rural healthcare dashboard.">
+  <link rel="manifest" href="manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page-dashboard">
+
+  <!-- Top Navigation Header -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="dashboard.html" class="brand">
+        <div class="brand-icon">✚</div>
+        <div class="brand-text">
+          <h1 data-i18n="app_title">SevaHealth</h1>
+          <span data-i18n="app_subtitle">Offline-First Smart Healthcare</span>
+        </div>
+      </a>
+
+      <div class="header-controls">
+        <!-- Language Switcher -->
+        <select id="lang-select" class="form-select" style="min-height: 36px; padding: 2px 8px; width: auto; font-size: 0.8125rem;">
+          <option value="en">English</option>
+          <option value="te">తెలుగు</option>
+        </select>
+
+        <!-- Simulated Offline Toggle for SIH Demonstration -->
+        <button id="btn-toggle-offline-demo" class="btn btn-outline btn-sm">
+          📡 Simulate Offline
+        </button>
+
+        <!-- Network Online / Offline Status Badge -->
+        <span id="network-status-badge" class="badge badge-status-online">
+          <span class="badge-status-dot status-online"></span>
+          <span>ONLINE</span>
+        </span>
+
+        <!-- Sync Pending Badge & Sync Now Button -->
+        <span id="sync-status-indicator" class="badge badge-primary">☁️ All synced</span>
+        <button id="btn-sync-now" class="btn btn-primary btn-sm" data-i18n="sync_now">Sync Now</button>
+
+        <!-- Role Badge & Logout -->
+        <span id="user-role-badge" class="badge">Role</span>
+        <button id="btn-logout" class="btn btn-danger-outline btn-sm" onclick="logout()" data-i18n="sign_out">Sign Out</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- App Layout -->
+  <div class="app-layout">
+
+    <!-- Sidebar Navigation -->
+    <aside class="app-sidebar">
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-link active">
+          <span>📊</span> <span data-i18n="nav_dashboard">Dashboard</span>
+        </a>
+        <a href="patient.html" class="nav-link">
+          <span>🏡</span> <span data-i18n="nav_patients">Patients &amp; Doorstep</span>
+        </a>
+        <a href="doctor.html" class="nav-link">
+          <span>🩺</span> <span data-i18n="nav_doctor_queue">Doctor Queue</span>
+        </a>
+        <a href="referrals.html" class="nav-link">
+          <span>🚑</span> <span data-i18n="nav_referrals">Referrals</span>
+        </a>
+        <a href="followups.html" class="nav-link">
+          <span>📋</span> <span data-i18n="nav_followups">Follow-ups</span>
+        </a>
+      </nav>
+
+      <!-- Offline Info Card in Sidebar -->
+      <div style="margin-top: auto; padding: 1rem; background: var(--slate-50); border-top: 1px solid var(--slate-200); font-size: 0.75rem; color: var(--slate-600);">
+        <p><strong>💡 Offline Architecture:</strong></p>
+        <p>PWA Service Worker + IndexedDB store records locally without network. Instant automatic sync on reconnect.</p>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="app-main-content">
+
+      <!-- Welcome Banner -->
+      <div class="welcome-banner">
+        <div>
+          <h2 style="font-size: 1.4rem; font-weight: 800;">
+            <span data-i18n="welcome">Welcome</span>, <span id="banner-user-name">Healthcare Worker</span>
+          </h2>
+          <p style="color: var(--slate-300); font-size: 0.875rem; margin-top: 0.2rem;">
+            Primary Health Centre: <strong id="banner-facility" style="color: #5eead4;">Chirala PHC</strong>
+          </p>
+        </div>
+        <div class="banner-pill">
+          <span id="banner-user-role">Role</span>
+        </div>
+      </div>
+
+      <!-- Role-Specific Action Banners -->
+      
+      <!-- ASHA Quick Action -->
+      <div id="asha-quick-actions" style="display: none; background: linear-gradient(135deg, #0d9488, #0f766e); color: white; padding: 1.25rem 1.5rem; border-radius: var(--radius-lg); margin-bottom: 1.75rem; box-shadow: var(--shadow-sm);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <h3 style="font-size: 1.15rem; font-weight: 700;">🏡 ASHA Doorstep Health Visit</h3>
+            <p style="font-size: 0.875rem; opacity: 0.9;">Perform intake, record vitals, and run rule-based Smart Triage directly at patient home (works 100% offline).</p>
+          </div>
+          <a href="patient.html" class="btn" style="background: white; color: var(--primary-dark); font-weight: 700;">
+            + Start Doorstep Visit &rarr;
+          </a>
+        </div>
+      </div>
+
+      <!-- Doctor Quick Action -->
+      <div id="doctor-quick-actions" style="display: none; background: linear-gradient(135deg, #1e40af, #1e3a8a); color: white; padding: 1.25rem 1.5rem; border-radius: var(--radius-lg); margin-bottom: 1.75rem; box-shadow: var(--shadow-sm);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <h3 style="font-size: 1.15rem; font-weight: 700;">🩺 Doctor Consultation Queue</h3>
+            <p style="font-size: 0.875rem; opacity: 0.9;">Review prioritized triage cases (RED Emergency &gt; YELLOW Priority), open tele-consultations, and issue prescriptions.</p>
+          </div>
+          <a href="doctor.html" class="btn" style="background: white; color: #1e40af; font-weight: 700;">
+            Open Doctor Queue &rarr;
+          </a>
+        </div>
+      </div>
+
+      <!-- Admin Quick Action -->
+      <div id="admin-quick-actions" style="display: none; background: linear-gradient(135deg, #4f46e5, #4338ca); color: white; padding: 1.25rem 1.5rem; border-radius: var(--radius-lg); margin-bottom: 1.75rem; box-shadow: var(--shadow-sm);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <h3 style="font-size: 1.15rem; font-weight: 700;">🏢 Block Health Administration &amp; Facility Oversight</h3>
+            <p style="font-size: 0.875rem; opacity: 0.9;">Monitor PHC medicine supply inventory, cross-facility specialist referral loops, and Sub-Centre offline sync health.</p>
+          </div>
+          <a href="referrals.html" class="btn" style="background: white; color: #4338ca; font-weight: 700;">
+            Monitor Referral Network &rarr;
+          </a>
+        </div>
+      </div>
+
+      <!-- KPI Cards Grid (Role-Filtered) -->
+      <div class="cards-grid">
+        
+        <!-- Total Patients (ASHA / Doctor / Admin) -->
+        <div class="stat-card card-asha card-doctor card-admin" id="card-stat-patients">
+          <div class="stat-card-header">
+            <span class="stat-title" data-i18n="stat_total_patients">Total Patients</span>
+            <div class="stat-icon" style="background: #eff6ff; color: #3b82f6;">👥</div>
+          </div>
+          <div class="stat-value" id="stat-total-patients">0</div>
+          <div class="stat-footer">Registered in rural cluster</div>
+        </div>
+
+        <!-- Today's Visits (ASHA Only) -->
+        <div class="stat-card card-asha" id="card-stat-visits">
+          <div class="stat-card-header">
+            <span class="stat-title" data-i18n="stat_today_visits">Today's Visits</span>
+            <div class="stat-icon" style="background: #ecfdf5; color: #10b981;">🏡</div>
+          </div>
+          <div class="stat-value" id="stat-today-visits">0</div>
+          <div class="stat-footer">Doorstep intakes recorded</div>
+        </div>
+
+        <!-- Waiting Patients (Doctor Only) -->
+        <div class="stat-card card-doctor" id="card-stat-waiting">
+          <div class="stat-card-header">
+            <span class="stat-title" data-i18n="stat_waiting_patients">Waiting Patients</span>
+            <div class="stat-icon" style="background: #fffbeb; color: #f59e0b;">⏳</div>
+          </div>
+          <div class="stat-value" id="stat-waiting-patients">0</div>
+          <div class="stat-footer">In doctor triage queue</div>
+        </div>
+
+        <!-- High Risk RED (ASHA / Doctor / Admin) -->
+        <div class="stat-card card-asha card-doctor card-admin" id="card-stat-red">
+          <div class="stat-card-header">
+            <span class="stat-title" data-i18n="stat_high_risk">High-Risk (RED)</span>
+            <div class="stat-icon" style="background: #fef2f2; color: #ef4444;">🚨</div>
+          </div>
+          <div class="stat-value" id="stat-high-risk" style="color: var(--risk-red);">0</div>
+          <div class="stat-footer">Emergency attention flagged</div>
+        </div>
+
+        <!-- Pending Referrals (ASHA / Doctor / Admin) -->
+        <div class="stat-card card-asha card-doctor card-admin" id="card-stat-referrals">
+          <div class="stat-card-header">
+            <span class="stat-title" data-i18n="stat_pending_referrals">Pending Referrals</span>
+            <div class="stat-icon" style="background: #f0fdfa; color: #0d9488;">🚑</div>
+          </div>
+          <div class="stat-value" id="stat-pending-referrals">0</div>
+          <div class="stat-footer">Escalated to specialty hospital</div>
+        </div>
+
+        <!-- Follow-ups Due (ASHA Only) -->
+        <div class="stat-card card-asha" id="card-stat-followups">
+          <div class="stat-card-header">
+            <span class="stat-title" data-i18n="stat_followups_due">Follow-ups Due</span>
+            <div class="stat-icon" style="background: #f5f3ff; color: #8b5cf6;">📋</div>
+          </div>
+          <div class="stat-value" id="stat-followups-due">0</div>
+          <div class="stat-footer">Home visits scheduled</div>
+        </div>
+
+      </div>
+
+      <!-- Recent Patients Section -->
+      <div style="background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--slate-200); padding: 1.5rem; margin-bottom: 2rem; box-shadow: var(--shadow-xs);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--slate-900);">Recent Doorstep Intakes &amp; Triage</h3>
+          <a href="patient.html" class="btn btn-outline btn-sm">View All Patients &rarr;</a>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Patient ID</th>
+                <th>Patient Name</th>
+                <th>Village</th>
+                <th>Triage Risk</th>
+                <th>Vitals</th>
+                <th>Care Record</th>
+              </tr>
+            </thead>
+            <tbody id="recent-patients-body">
+              <tr><td colspan="6" style="text-align: center; padding: 1.5rem;">Loading data...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Admin PHC Medicine Inventory Section -->
+      <div id="admin-inventory-section" style="display: none; background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--slate-200); padding: 1.5rem; box-shadow: var(--shadow-xs);">
+        <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--slate-900); margin-bottom: 1rem;">
+          💊 PHC Essential Medicine Availability
+        </h3>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Medicine Name</th>
+                <th>Stock Count</th>
+                <th>Availability Status</th>
+              </tr>
+            </thead>
+            <tbody id="admin-meds-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/api.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/offline.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

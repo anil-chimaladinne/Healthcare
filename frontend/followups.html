@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Follow-ups & Reminders - SevaHealth</title>
+  <meta name="description" content="Community care continuity, follow-up scheduling, and demo SMS reminders.">
+  <link rel="manifest" href="manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page-followups">
+
+  <!-- Top Header -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="dashboard.html" class="brand">
+        <div class="brand-icon">✚</div>
+        <div class="brand-text">
+          <h1 data-i18n="app_title">SevaHealth</h1>
+          <span data-i18n="app_subtitle">Offline-First Smart Healthcare</span>
+        </div>
+      </a>
+
+      <div class="header-controls">
+        <select id="lang-select" class="form-select" style="min-height: 36px; padding: 2px 8px; width: auto; font-size: 0.8125rem;">
+          <option value="en">English</option>
+          <option value="te">తెలుగు</option>
+        </select>
+
+        <span id="network-status-badge" class="badge badge-status-online">
+          <span class="badge-status-dot status-online"></span>
+          <span>ONLINE</span>
+        </span>
+
+        <span id="sync-status-indicator" class="badge badge-primary">☁️ All synced</span>
+        <button id="btn-sync-now" class="btn btn-primary btn-sm" data-i18n="sync_now">Sync Now</button>
+
+        <span id="user-role-badge" class="badge">Role</span>
+        <button id="btn-logout" class="btn btn-danger-outline btn-sm" onclick="logout()" data-i18n="sign_out">Sign Out</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- App Layout -->
+  <div class="app-layout">
+
+    <aside class="app-sidebar">
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-link">
+          <span>📊</span> <span data-i18n="nav_dashboard">Dashboard</span>
+        </a>
+        <a href="patient.html" class="nav-link">
+          <span>🏡</span> <span data-i18n="nav_patients">Patients &amp; Doorstep</span>
+        </a>
+        <a href="doctor.html" class="nav-link">
+          <span>🩺</span> <span data-i18n="nav_doctor_queue">Doctor Queue</span>
+        </a>
+        <a href="referrals.html" class="nav-link">
+          <span>🚑</span> <span data-i18n="nav_referrals">Referrals</span>
+        </a>
+        <a href="followups.html" class="nav-link active">
+          <span>📋</span> <span data-i18n="nav_followups">Follow-ups</span>
+        </a>
+      </nav>
+    </aside>
+
+    <main class="app-main-content">
+      
+      <!-- Follow-up Banner -->
+      <div style="background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--slate-200); padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: var(--shadow-xs);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--slate-900);">
+              📋 <span data-i18n="nav_followups">Care Continuity &amp; Follow-ups</span>
+            </h2>
+            <p style="font-size: 0.875rem; color: var(--slate-500);">
+              Ensure treatment adherence and schedule post-consultation home visits with automated bilingual SMS reminders.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Follow-ups Table -->
+      <div style="background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--slate-200); padding: 1.5rem; box-shadow: var(--shadow-xs);">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Patient</th>
+                <th>Reason for Visit</th>
+                <th>Due Date</th>
+                <th>Assigned ASHA</th>
+                <th>Status</th>
+                <th>Demo SMS Reminder</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="followups-list-body">
+              <tr><td colspan="7" style="text-align: center; padding: 2rem;">Loading follow-ups...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Demo SMS Reminder Modal Preview -->
+  <div id="sms-preview-modal" class="modal-backdrop" style="display: none;">
+    <div class="modal-card" style="max-width: 500px;">
+      <div class="modal-header">
+        <h3 style="font-size: 1.15rem; font-weight: 800; color: var(--slate-900);">
+          📲 Demo SMS Reminder Dispatched
+        </h3>
+        <button class="modal-close-btn" onclick="closeSmsModal()">&times;</button>
+      </div>
+
+      <p style="font-size: 0.875rem; color: var(--slate-600); margin-bottom: 1rem;">
+        Sent to Patient Mobile: <strong id="sms-phone-disp">+91 XXXXXXXX</strong>
+      </p>
+
+      <div style="background: var(--slate-50); border: 1px solid var(--slate-200); border-radius: var(--radius-md); padding: 1rem; margin-bottom: 1rem;">
+        <h4 style="font-size: 0.75rem; text-transform: uppercase; color: var(--slate-500); margin-bottom: 0.25rem;">English SMS Content</h4>
+        <p id="sms-en-text" style="font-size: 0.875rem; color: var(--slate-800);"></p>
+      </div>
+
+      <div style="background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: var(--radius-md); padding: 1rem; margin-bottom: 1.25rem;">
+        <h4 style="font-size: 0.75rem; text-transform: uppercase; color: #065f46; margin-bottom: 0.25rem;">తెలుగు (Telugu) SMS Content</h4>
+        <p id="sms-te-text" style="font-size: 0.875rem; color: #064e3b;"></p>
+      </div>
+
+      <div style="text-align: right;">
+        <button class="btn btn-primary btn-sm" onclick="closeSmsModal()">Close Preview</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/api.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/offline.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/followups.js"></script>
+</body>
+</html>

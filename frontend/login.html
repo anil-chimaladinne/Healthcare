@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - SevaHealth</title>
+  <meta name="description" content="Sign in to SevaHealth role portals for Health Worker, Doctor, and Administrator.">
+  <link rel="manifest" href="manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page-login">
+
+  <!-- Minimal Header -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="index.html" class="brand">
+        <div class="brand-icon">✚</div>
+        <div class="brand-text">
+          <h1 data-i18n="app_title">SevaHealth</h1>
+          <span data-i18n="app_subtitle">Offline-First Smart Healthcare</span>
+        </div>
+      </a>
+
+      <div class="header-controls">
+        <select id="lang-select" class="form-select" style="min-height: 36px; padding: 2px 8px; width: auto; font-size: 0.8125rem;">
+          <option value="en">English</option>
+          <option value="te">తెలుగు (Telugu)</option>
+        </select>
+        <a href="index.html" class="btn btn-outline btn-sm">&larr; Home</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Login Card Container -->
+  <main style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 2rem 1rem;">
+    <div style="background: var(--white); width: 100%; max-width: 440px; border-radius: var(--radius-lg); border: 1px solid var(--slate-200); box-shadow: var(--shadow-xl); padding: 2.25rem;">
+      
+      <div style="text-align: center; margin-bottom: 1.75rem;">
+        <div class="brand-icon" style="margin: 0 auto 0.75rem; width: 48px; height: 48px; font-size: 1.5rem;">✚</div>
+        <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--slate-900);">SevaHealth Portal</h2>
+        <p style="font-size: 0.875rem; color: var(--slate-500); margin-top: 0.25rem;">Select your role to access your healthcare workspace</p>
+      </div>
+
+      <!-- Error Alert -->
+      <div id="error-alert" style="display: none; padding: 0.75rem 1rem; border-radius: var(--radius-md); font-size: 0.875rem; margin-bottom: 1.25rem; background: var(--risk-red-bg); border: 1px solid var(--risk-red-border); color: var(--risk-red);" role="alert"></div>
+
+      <!-- Login Form -->
+      <form id="login-form" novalidate>
+        <div class="form-group">
+          <label for="username" class="form-label">Username</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            class="form-input"
+            placeholder="e.g. healthworker, doctor, admin"
+            required
+            autocomplete="username"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="password" class="form-label">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            class="form-input"
+            placeholder="Enter demo password"
+            required
+            autocomplete="current-password"
+          >
+        </div>
+
+        <button type="submit" id="btn-submit-login" class="btn btn-primary btn-block">
+          Sign In to Workspace &rarr;
+        </button>
+      </form>
+
+      <!-- Quick Demo Credentials for SIH Judges -->
+      <div style="margin-top: 1.75rem; padding-top: 1.25rem; border-top: 1px dashed var(--slate-200);">
+        <h4 style="font-size: 0.8125rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--slate-500); margin-bottom: 0.75rem; text-align: center;">
+          ⚡ SIH Quick Role Selector (Click to Autofill)
+        </h4>
+
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem;">
+          <button type="button" class="btn btn-outline btn-sm" style="font-size: 0.75rem; padding: 0.5rem 0.25rem; text-align: center;" onclick="setDemoCredentials('healthworker', 'health123')">
+            🏥 ASHA / HW
+          </button>
+          <button type="button" class="btn btn-outline btn-sm" style="font-size: 0.75rem; padding: 0.5rem 0.25rem; text-align: center;" onclick="setDemoCredentials('doctor', 'doctor123')">
+            👨‍⚕️ Doctor
+          </button>
+          <button type="button" class="btn btn-outline btn-sm" style="font-size: 0.75rem; padding: 0.5rem 0.25rem; text-align: center;" onclick="setDemoCredentials('admin', 'admin123')">
+            ⚙️ Admin
+          </button>
+        </div>
+
+        <p style="font-size: 0.75rem; color: var(--slate-400); text-align: center; margin-top: 0.75rem;">
+          Passwords: <code>health123</code> &bull; <code>doctor123</code> &bull; <code>admin123</code>
+        </p>
+      </div>
+
+    </div>
+  </main>
+
+  <footer style="background: var(--white); border-top: 1px solid var(--slate-200); padding: 1rem; text-align: center; font-size: 0.8125rem; color: var(--slate-500);">
+    <p>&copy; 2026 <strong>SevaHealth</strong> &bull; Offline-First Smart Healthcare for Rural India</p>
+  </footer>
+
+  <script src="js/api.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

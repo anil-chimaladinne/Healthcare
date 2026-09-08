@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Referrals Management - SevaHealth</title>
+  <meta name="description" content="Track full-loop specialist referrals from Sub-Centres to District Specialty Hospitals.">
+  <link rel="manifest" href="manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page-referrals">
+
+  <!-- Top Header -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="dashboard.html" class="brand">
+        <div class="brand-icon">✚</div>
+        <div class="brand-text">
+          <h1 data-i18n="app_title">SevaHealth</h1>
+          <span data-i18n="app_subtitle">Offline-First Smart Healthcare</span>
+        </div>
+      </a>
+
+      <div class="header-controls">
+        <select id="lang-select" class="form-select" style="min-height: 36px; padding: 2px 8px; width: auto; font-size: 0.8125rem;">
+          <option value="en">English</option>
+          <option value="te">తెలుగు</option>
+        </select>
+
+        <span id="network-status-badge" class="badge badge-status-online">
+          <span class="badge-status-dot status-online"></span>
+          <span>ONLINE</span>
+        </span>
+
+        <span id="sync-status-indicator" class="badge badge-primary">☁️ All synced</span>
+        <button id="btn-sync-now" class="btn btn-primary btn-sm" data-i18n="sync_now">Sync Now</button>
+
+        <span id="user-role-badge" class="badge">Role</span>
+        <button id="btn-logout" class="btn btn-danger-outline btn-sm" onclick="logout()" data-i18n="sign_out">Sign Out</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- App Layout -->
+  <div class="app-layout">
+
+    <aside class="app-sidebar">
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-link">
+          <span>📊</span> <span data-i18n="nav_dashboard">Dashboard</span>
+        </a>
+        <a href="patient.html" class="nav-link">
+          <span>🏡</span> <span data-i18n="nav_patients">Patients &amp; Doorstep</span>
+        </a>
+        <a href="doctor.html" class="nav-link">
+          <span>🩺</span> <span data-i18n="nav_doctor_queue">Doctor Queue</span>
+        </a>
+        <a href="referrals.html" class="nav-link active">
+          <span>🚑</span> <span data-i18n="nav_referrals">Referrals</span>
+        </a>
+        <a href="followups.html" class="nav-link">
+          <span>📋</span> <span data-i18n="nav_followups">Follow-ups</span>
+        </a>
+      </nav>
+    </aside>
+
+    <main class="app-main-content">
+      
+      <!-- Referral Loop Banner -->
+      <div style="background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--slate-200); padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: var(--shadow-xs);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--slate-900);">
+              🚑 <span data-i18n="nav_referrals">Tracked Referral Loop</span>
+            </h2>
+            <p style="font-size: 0.875rem; color: var(--slate-500);">
+              No referral falls through the cracks: Tracked status loop from Sub-Centre &rarr; PHC &rarr; District Hospital &rarr; Home Follow-up.
+            </p>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="openCreateReferralModal()">
+            + Create New Referral
+          </button>
+        </div>
+      </div>
+
+      <!-- Referrals Table -->
+      <div style="background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--slate-200); padding: 1.5rem; box-shadow: var(--shadow-xs);">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Referral ID</th>
+                <th>Patient Details</th>
+                <th>From Facility</th>
+                <th>Referred To</th>
+                <th>Reason / Justification</th>
+                <th>Priority</th>
+                <th>Status Loop</th>
+                <th>Created Date</th>
+              </tr>
+            </thead>
+            <tbody id="referrals-list-body">
+              <tr><td colspan="8" style="text-align: center; padding: 2rem;">Loading referrals...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Create Referral Modal -->
+  <div id="create-referral-page-modal" class="modal-backdrop" style="display: none;">
+    <div class="modal-card" style="max-width: 580px;">
+      <div class="modal-header">
+        <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--slate-900);">
+          🚑 Create Specialist Referral
+        </h3>
+        <button class="modal-close-btn" onclick="closeCreateReferralModal()">&times;</button>
+      </div>
+
+      <form id="page-referral-form">
+        <div class="form-group">
+          <label for="pref-patient-id" class="form-label">Select Patient *</label>
+          <select id="pref-patient-id" class="form-select" required>
+            <option value="">Loading patients...</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="pref-from-facility" class="form-label">Origin Facility *</label>
+          <input type="text" id="pref-from-facility" class="form-input" value="Ramapuram Sub-Centre" required>
+        </div>
+
+        <div class="form-group">
+          <label for="pref-to-facility" class="form-label">Destination Facility / Hospital *</label>
+          <select id="pref-to-facility" class="form-select" required>
+            <option value="Chirala Primary Health Centre">Chirala Primary Health Centre</option>
+            <option value="District Hospital Ongole - Cardiology Unit">District Hospital Ongole - Cardiology Unit</option>
+            <option value="RIMS General Hospital - Pulmonology Department">RIMS General Hospital - Pulmonology Department</option>
+            <option value="Community Health Centre (CHC) Bapatla">Community Health Centre (CHC) Bapatla</option>
+            <option value="District Maternity & Child Specialty Hospital">District Maternity &amp; Child Specialty Hospital</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="pref-priority" class="form-label">Priority Level *</label>
+          <select id="pref-priority" class="form-select" required>
+            <option value="Emergency">🚨 Emergency (Immediate Ambulance Transfer)</option>
+            <option value="Priority" selected>⚠️ Priority (Within 24 Hours)</option>
+            <option value="Routine">Routine Elective Referral</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="pref-reason" class="form-label">Reason for Referral / Chief Symptoms *</label>
+          <textarea id="pref-reason" class="form-textarea" placeholder="Describe symptoms or clinical reason for specialist escalation..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="pref-notes" class="form-label">Transport / Emergency Instructions</label>
+          <input type="text" id="pref-notes" class="form-input" placeholder="e.g. 108 Ambulance coordinated. Attendant accompanying.">
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1rem;">
+          <button type="button" class="btn btn-outline" onclick="closeCreateReferralModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Referral &rarr;</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/api.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/offline.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/referrals.js"></script>
+</body>
+</html>

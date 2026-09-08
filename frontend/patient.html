@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patients & Doorstep Visit - SevaHealth</title>
+  <meta name="description" content="Frontline ASHA doorstep patient registration, vitals, smart triage, and longitudinal records.">
+  <link rel="manifest" href="manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page-patient">
+
+  <!-- Top Navigation Header -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="dashboard.html" class="brand">
+        <div class="brand-icon">✚</div>
+        <div class="brand-text">
+          <h1 data-i18n="app_title">SevaHealth</h1>
+          <span data-i18n="app_subtitle">Offline-First Smart Healthcare</span>
+        </div>
+      </a>
+
+      <div class="header-controls">
+        <select id="lang-select" class="form-select" style="min-height: 36px; padding: 2px 8px; width: auto; font-size: 0.8125rem;">
+          <option value="en">English</option>
+          <option value="te">తెలుగు</option>
+        </select>
+
+        <button id="btn-toggle-offline-demo" class="btn btn-outline btn-sm">
+          📡 Simulate Offline
+        </button>
+
+        <span id="network-status-badge" class="badge badge-status-online">
+          <span class="badge-status-dot status-online"></span>
+          <span>ONLINE</span>
+        </span>
+
+        <span id="sync-status-indicator" class="badge badge-primary">☁️ All synced</span>
+        <button id="btn-sync-now" class="btn btn-primary btn-sm" data-i18n="sync_now">Sync Now</button>
+
+        <span id="user-role-badge" class="badge">Role</span>
+        <button id="btn-logout" class="btn btn-danger-outline btn-sm" onclick="logout()" data-i18n="sign_out">Sign Out</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- App Layout -->
+  <div class="app-layout">
+
+    <!-- Sidebar Navigation -->
+    <aside class="app-sidebar">
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-link">
+          <span>📊</span> <span data-i18n="nav_dashboard">Dashboard</span>
+        </a>
+        <a href="patient.html" class="nav-link active">
+          <span>🏡</span> <span data-i18n="nav_patients">Patients &amp; Doorstep</span>
+        </a>
+        <a href="doctor.html" class="nav-link">
+          <span>🩺</span> <span data-i18n="nav_doctor_queue">Doctor Queue</span>
+        </a>
+        <a href="referrals.html" class="nav-link">
+          <span>🚑</span> <span data-i18n="nav_referrals">Referrals</span>
+        </a>
+        <a href="followups.html" class="nav-link">
+          <span>📋</span> <span data-i18n="nav_followups">Follow-ups</span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="app-main-content">
+
+      <!-- Doorstep Intake Card -->
+      <div class="doorstep-intake-card" style="background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--slate-200); padding: 1.75rem; margin-bottom: 2rem; box-shadow: var(--shadow-sm);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.5rem;">
+          <div>
+            <h2 style="font-size: 1.35rem; font-weight: 800; color: var(--slate-900);">
+              🏡 <span data-i18n="btn_start_doorstep">Start Doorstep Visit</span> &amp; Intake
+            </h2>
+            <p style="font-size: 0.875rem; color: var(--slate-500);">
+              Register patient, record symptoms and vitals, and evaluate real-time Smart Triage (saved to IndexedDB when offline).
+            </p>
+          </div>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <span class="badge badge-primary">⚡ Smart Triage Ready</span>
+            <span class="badge" style="background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe;">
+              🩺 Diagnosis: Pending Doctor Review
+            </span>
+          </div>
+        </div>
+
+        <!-- Scope Clarification Note -->
+        <div style="background: #f8fafc; border: 1px dashed var(--slate-300); border-radius: var(--radius-md); padding: 0.75rem 1rem; margin-bottom: 1.25rem; font-size: 0.8125rem; color: var(--slate-600); display: flex; align-items: center; gap: 0.5rem;">
+          <span>💡</span>
+          <span><strong>Frontline Protocol:</strong> ASHA workers capture symptoms &amp; vitals to generate Smart Triage acuity. Provisional medical diagnosis is strictly provided by the Doctor during consultation.</span>
+        </div>
+
+        <form id="patient-intake-form">
+          <!-- Demographic Section -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem;">
+            <div class="form-group">
+              <label for="p_name" class="form-label" data-i18n="name">Full Name *</label>
+              <input type="text" id="p_name" class="form-input" placeholder="e.g. Ramesh Varma" required>
+            </div>
+
+            <div class="form-group">
+              <label for="p_age" class="form-label" data-i18n="age">Age *</label>
+              <input type="number" id="p_age" class="form-input" placeholder="e.g. 52" min="1" max="120" required>
+            </div>
+
+            <div class="form-group">
+              <label for="p_gender" class="form-label" data-i18n="gender">Gender *</label>
+              <select id="p_gender" class="form-select" required>
+                <option value="Female">Female</option>
+                <option value="Male">Male</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="p_phone" class="form-label" data-i18n="phone">Phone Number *</label>
+              <input type="tel" id="p_phone" class="form-input" placeholder="e.g. 9848012345" required>
+            </div>
+
+            <div class="form-group">
+              <label for="p_village" class="form-label" data-i18n="village">Village / Hamlet *</label>
+              <input type="text" id="p_village" class="form-input" placeholder="e.g. Ramapuram" required>
+            </div>
+
+            <div class="form-group">
+              <label for="p_aadhaar" class="form-label" data-i18n="aadhaar_optional">Aadhaar Last 4 (Optional)</label>
+              <input type="text" id="p_aadhaar" class="form-input" placeholder="e.g. 8492" maxlength="4">
+            </div>
+          </div>
+
+          <!-- Symptoms & Voice Section -->
+          <div style="background: var(--slate-50); border: 1px solid var(--slate-200); border-radius: var(--radius-md); padding: 1.25rem; margin: 1rem 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+              <label for="p_symptoms" class="form-label" style="margin-bottom: 0;" data-i18n="symptoms_label">
+                Symptoms / Chief Complaints *
+              </label>
+              <!-- Voice-to-Text Input Button -->
+              <button type="button" id="btn-voice-symptoms" class="btn btn-outline btn-sm">
+                🎤 <span data-i18n="voice_input_tip">Voice Input</span>
+              </button>
+            </div>
+
+            <textarea id="p_symptoms" class="form-textarea" placeholder="Describe symptoms (e.g. high fever for 3 days, breathlessness, chest tightness)..." required></textarea>
+
+            <div style="display: flex; gap: 1rem; align-items: center; margin-top: 0.75rem; flex-wrap: wrap;">
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <label for="p_duration" class="form-label" style="margin-bottom: 0;" data-i18n="duration_days">Duration (Days):</label>
+                <input type="number" id="p_duration" class="form-input" style="width: 80px; min-height: 36px; padding: 4px 8px;" value="2" min="1">
+              </div>
+            </div>
+
+            <!-- Emergency Warning Signs Checkboxes -->
+            <div style="margin-top: 1rem; border-top: 1px dashed var(--slate-300); padding-top: 0.75rem;">
+              <label class="form-label" style="color: var(--risk-red);" data-i18n="emergency_flags">
+                ⚠️ Emergency Warning Signs (Select if observed):
+              </label>
+              <div style="display: flex; gap: 1rem; flex-wrap: wrap; font-size: 0.875rem;">
+                <label><input type="checkbox" class="emergency-flag-chk" value="Severe chest pain"> Severe chest pain</label>
+                <label><input type="checkbox" class="emergency-flag-chk" value="Difficulty breathing / gasping"> Difficulty breathing</label>
+                <label><input type="checkbox" class="emergency-flag-chk" value="Unconscious / altered mental state"> Altered consciousness</label>
+                <label><input type="checkbox" class="emergency-flag-chk" value="Severe bleeding"> Severe bleeding</label>
+                <label><input type="checkbox" class="emergency-flag-chk" value="Convulsions / seizures"> Convulsions / Seizure</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Vitals Inputs Grid -->
+          <div style="margin-bottom: 1.5rem;">
+            <h4 style="font-size: 0.9375rem; font-weight: 700; color: var(--slate-800); margin-bottom: 0.75rem;" data-i18n="vitals_section">
+              🩺 Vitals Signs Assessment (Frontline Device Inputs)
+            </h4>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.75rem;">
+              <div class="form-group">
+                <label for="p_spo2" class="form-label">SpO2 (%) *</label>
+                <input type="number" id="p_spo2" class="form-input" placeholder="e.g. 96" min="50" max="100">
+              </div>
+
+              <div class="form-group">
+                <label for="p_bp_sys" class="form-label">BP Sys (mmHg)</label>
+                <input type="number" id="p_bp_sys" class="form-input" placeholder="e.g. 120" min="60" max="260">
+              </div>
+
+              <div class="form-group">
+                <label for="p_bp_dia" class="form-label">BP Dia (mmHg)</label>
+                <input type="number" id="p_bp_dia" class="form-input" placeholder="e.g. 80" min="40" max="160">
+              </div>
+
+              <div class="form-group">
+                <label for="p_temp" class="form-label">Temp (°F)</label>
+                <input type="number" id="p_temp" class="form-input" placeholder="e.g. 98.6" step="0.1" min="90" max="110">
+              </div>
+
+              <div class="form-group">
+                <label for="p_hr" class="form-label">Heart Rate (bpm)</label>
+                <input type="number" id="p_hr" class="form-input" placeholder="e.g. 78" min="30" max="220">
+              </div>
+
+              <div class="form-group">
+                <label for="p_sugar" class="form-label">Blood Sugar (mg/dL)</label>
+                <input type="number" id="p_sugar" class="form-input" placeholder="e.g. 110" min="40" max="600">
+              </div>
+            </div>
+          </div>
+
+          <!-- Live Smart Triage Result Box (Evaluates in real-time) -->
+          <div id="live-triage-preview" style="display: none;"></div>
+
+          <!-- Form Submit Buttons -->
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem;">
+            <button type="button" id="btn-eval-triage" class="btn btn-outline" data-i18n="btn_run_triage">
+              ⚡ Evaluate Smart Triage
+            </button>
+            <button type="submit" id="btn-submit-patient" class="btn btn-primary" data-i18n="btn_save_offline">
+              💾 Save Record (Offline / Online)
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Patients Database Table Section -->
+      <div style="background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--slate-200); padding: 1.5rem; box-shadow: var(--shadow-xs);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 1rem;">
+          <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--slate-900);">
+            👥 Community Patient Directory
+          </h3>
+          <div style="width: 280px;">
+            <input type="text" id="search-patient-input" class="form-input" placeholder="Search by name, ID, village..." style="min-height: 38px;">
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Patient ID</th>
+                <th>Name / Demographics</th>
+                <th>Village / Phone</th>
+                <th>Triage Risk</th>
+                <th>Latest Vitals</th>
+                <th>Queue Status</th>
+                <th>Longitudinal EHR</th>
+              </tr>
+            </thead>
+            <tbody id="patients-list-body">
+              <tr><td colspan="7" style="text-align: center; padding: 2rem;">Loading patients...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Longitudinal EHR Care Journey Timeline Modal -->
+  <div id="ehr-timeline-modal" class="modal-backdrop" style="display: none;">
+    <div class="modal-card" style="max-width: 750px;">
+      <div class="modal-header">
+        <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--slate-900);" data-i18n="timeline_title">
+          🌟 Longitudinal Care Journey Timeline
+        </h3>
+        <button class="modal-close-btn" onclick="closeEhrModal()">&times;</button>
+      </div>
+      <div id="ehr-timeline-content"></div>
+    </div>
+  </div>
+
+  <!-- FHIR / ABDM JSON Preview Modal -->
+  <div id="fhir-preview-modal" class="modal-backdrop" style="display: none;">
+    <div class="modal-card" style="max-width: 650px;">
+      <div class="modal-header">
+        <h3 style="font-size: 1.15rem; font-weight: 800;" data-i18n="fhir_preview">
+          🔗 FHIR R4 / ABDM Care-Context JSON Preview
+        </h3>
+        <button class="modal-close-btn" onclick="closeFhirModal()">&times;</button>
+      </div>
+      <p style="font-size: 0.8125rem; color: var(--slate-500); margin-bottom: 1rem;">
+        <em>FHIR/ABDM-ready prototype structure – actual integration is future work.</em>
+      </p>
+      <pre id="fhir-json-code" style="background: #0f172a; color: #38bdf8; padding: 1rem; border-radius: var(--radius-md); font-size: 0.75rem; overflow-x: auto; max-height: 400px; font-family: monospace;"></pre>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/api.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/offline.js"></script>
+  <script src="js/triage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/patient.js"></script>
+</body>
+</html>

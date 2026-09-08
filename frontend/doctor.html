@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doctor Workspace - SevaHealth</title>
+  <meta name="description" content="Doctor prioritized queue review, tele-consultations, e-prescriptions, and specialist referrals.">
+  <link rel="manifest" href="manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page-doctor">
+
+  <!-- Top Navigation Header -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="dashboard.html" class="brand">
+        <div class="brand-icon">✚</div>
+        <div class="brand-text">
+          <h1 data-i18n="app_title">SevaHealth</h1>
+          <span data-i18n="app_subtitle">Offline-First Smart Healthcare</span>
+        </div>
+      </a>
+
+      <div class="header-controls">
+        <select id="lang-select" class="form-select" style="min-height: 36px; padding: 2px 8px; width: auto; font-size: 0.8125rem;">
+          <option value="en">English</option>
+          <option value="te">తెలుగు</option>
+        </select>
+
+        <span id="network-status-badge" class="badge badge-status-online">
+          <span class="badge-status-dot status-online"></span>
+          <span>ONLINE</span>
+        </span>
+
+        <span id="sync-status-indicator" class="badge badge-primary">☁️ All synced</span>
+        <button id="btn-sync-now" class="btn btn-primary btn-sm" data-i18n="sync_now">Sync Now</button>
+
+        <span id="user-role-badge" class="badge">Doctor</span>
+        <button id="btn-logout" class="btn btn-danger-outline btn-sm" onclick="logout()" data-i18n="sign_out">Sign Out</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- App Layout -->
+  <div class="app-layout">
+
+    <!-- Sidebar Navigation -->
+    <aside class="app-sidebar">
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-link">
+          <span>📊</span> <span data-i18n="nav_dashboard">Dashboard</span>
+        </a>
+        <a href="patient.html" class="nav-link">
+          <span>🏡</span> <span data-i18n="nav_patients">Patients &amp; Doorstep</span>
+        </a>
+        <a href="doctor.html" class="nav-link active">
+          <span>🩺</span> <span data-i18n="nav_doctor_queue">Doctor Queue</span>
+        </a>
+        <a href="referrals.html" class="nav-link">
+          <span>🚑</span> <span data-i18n="nav_referrals">Referrals</span>
+        </a>
+        <a href="followups.html" class="nav-link">
+          <span>📋</span> <span data-i18n="nav_followups">Follow-ups</span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="app-main-content">
+
+      <!-- Header Title & Legend -->
+      <div style="background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--slate-200); padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: var(--shadow-xs);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--slate-900);">
+              🩺 <span data-i18n="doctor_workspace">Doctor Consultation Workspace</span>
+            </h2>
+            <p style="font-size: 0.875rem; color: var(--slate-500);">
+              Patients automatically prioritized by Smart Triage Acuity (RED Emergency &gt; YELLOW Priority &gt; GREEN Routine).
+            </p>
+          </div>
+
+          <!-- Queue Acuity Legend -->
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <span class="badge badge-risk-red">🚨 RED: Emergency</span>
+            <span class="badge badge-risk-yellow">⚠️ YELLOW: Priority</span>
+            <span class="badge badge-risk-green">✅ GREEN: Routine</span>
+          </div>
+        </div>
+
+        <!-- Doctor View Tabs -->
+        <div style="display: flex; gap: 0.75rem; margin-top: 1.25rem; border-top: 1px solid var(--slate-100); padding-top: 1rem;">
+          <button id="tab-waiting-queue" class="btn btn-primary btn-sm" onclick="switchDoctorTab('waiting')">
+            ⏳ Waiting Patient Queue
+          </button>
+          <button id="tab-completed-consults" class="btn btn-outline btn-sm" onclick="switchDoctorTab('completed')">
+            ✅ Completed Consultations &amp; Rx
+          </button>
+        </div>
+      </div>
+
+      <!-- Tab 1: Doctor Prioritized Queue Container -->
+      <div id="doctor-queue-view">
+        <div id="doctor-queue-container">
+          <div style="text-align: center; padding: 2rem;">Loading doctor priority queue...</div>
+        </div>
+      </div>
+
+      <!-- Tab 2: Completed Consultations Table -->
+      <div id="doctor-completed-view" style="display: none; background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--slate-200); padding: 1.5rem; box-shadow: var(--shadow-xs);">
+        <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--slate-900); margin-bottom: 1rem;">
+          📋 Completed Doctor Consultations &amp; Prescriptions
+        </h3>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Patient Details</th>
+                <th>Provisional Diagnosis</th>
+                <th>Doctor Clinical Notes</th>
+                <th>Prescription / Rx</th>
+                <th>Follow-up Date</th>
+                <th>Consulted Date</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="completed-consultations-body">
+              <tr><td colspan="7" style="text-align: center; padding: 2rem;">Loading completed records...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Tele-Consultation Modal Prototype -->
+  <div id="teleconsult-modal" class="modal-backdrop" style="display: none;">
+    <div class="modal-card" style="max-width: 750px;">
+      
+      <div class="modal-header">
+        <div>
+          <span class="badge badge-primary" style="margin-bottom: 0.25rem;">Tele-Consult Prototype</span>
+          <h3 style="font-size: 1.3rem; font-weight: 800; color: var(--slate-900);">
+            Doctor Clinical Consultation
+          </h3>
+        </div>
+        <button class="modal-close-btn" onclick="closeTeleConsultModal()">&times;</button>
+      </div>
+
+      <!-- Patient Vitals & Symptoms Summary Card -->
+      <div style="background: var(--slate-50); border: 1px solid var(--slate-200); border-radius: var(--radius-md); padding: 1.25rem; margin-bottom: 1.25rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
+          <div>
+            <strong id="tc-patient-name" style="font-size: 1.1rem; color: var(--slate-900);">Patient Name</strong>
+            <span id="tc-patient-id" class="badge badge-primary" style="margin-left: 0.5rem;">SEVA-000000</span>
+          </div>
+          <span id="tc-risk-badge" class="badge">Risk</span>
+        </div>
+
+        <p style="font-size: 0.8125rem; color: var(--slate-600); margin-bottom: 0.5rem;">
+          📍 <span id="tc-patient-village">Village</span> &bull; 📞 <span id="tc-patient-phone">Phone</span>
+        </p>
+
+        <div style="font-size: 0.875rem; margin-bottom: 0.35rem;">
+          <strong>Symptoms:</strong> <span id="tc-symptoms">None</span>
+        </div>
+
+        <div style="font-size: 0.875rem; color: var(--primary-dark); font-weight: 600;">
+          <strong>Vitals:</strong> <span id="tc-vitals-summary">SpO2: -- | BP: --</span>
+        </div>
+      </div>
+
+      <!-- Consultation Form -->
+      <form id="teleconsult-form">
+        <div class="form-group">
+          <label for="tc-doc-name" class="form-label">Consulting Doctor Name *</label>
+          <input type="text" id="tc-doc-name" class="form-input" required>
+        </div>
+
+        <div class="form-group">
+          <label for="tc-diagnosis" class="form-label" data-i18n="diagnosis_label">Provisional Diagnosis *</label>
+          <input type="text" id="tc-diagnosis" class="form-input" placeholder="e.g. Acute Bronchitis with Hypoxic Stress" required>
+        </div>
+
+        <div class="form-group">
+          <label for="tc-clinical-notes" class="form-label" data-i18n="clinical_notes">Clinical Consultation Notes *</label>
+          <textarea id="tc-clinical-notes" class="form-textarea" placeholder="Enter clinical observations, findings, and care plan..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="tc-prescription" class="form-label" data-i18n="prescription_label">E-Prescription &amp; Dosage Instructions</label>
+          <textarea id="tc-prescription" class="form-textarea" placeholder="e.g. Tab Paracetamol 500mg (1-0-1 x 3 days)&#10;Cap Amoxicillin 500mg (1-1-1 x 5 days)&#10;Salbutamol Inhaler (2 puffs SOS)"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="tc-followup-date" class="form-label" data-i18n="followup_date_label">Schedule Follow-up Date (ASHA Home Visit)</label>
+          <input type="date" id="tc-followup-date" class="form-input" style="width: auto;">
+        </div>
+
+        <div style="display: flex; gap: 1rem; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-top: 1.5rem; border-top: 1px solid var(--slate-200); padding-top: 1rem;">
+          <button type="button" class="btn btn-danger-outline" onclick="openReferralModalFromConsult()">
+            🚑 Escalate Referral
+          </button>
+          <div style="display: flex; gap: 0.75rem;">
+            <button type="button" class="btn btn-outline" onclick="closeTeleConsultModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary" data-i18n="btn_submit_consultation">Complete Consultation &rarr;</button>
+          </div>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- Specialist Referral Creation Modal -->
+  <div id="create-referral-modal" class="modal-backdrop" style="display: none;">
+    <div class="modal-card" style="max-width: 550px;">
+      <div class="modal-header">
+        <h3 style="font-size: 1.2rem; font-weight: 800; color: var(--slate-900);">
+          🚑 Escalate Specialist Referral
+        </h3>
+        <button class="modal-close-btn" onclick="closeReferralModal()">&times;</button>
+      </div>
+
+      <div style="margin-bottom: 1rem; font-size: 0.875rem;">
+        Patient: <strong id="ref-patient-name-disp">Patient</strong> (<span id="ref-patient-id-disp" class="code-font">SEVA-000000</span>)
+      </div>
+
+      <form id="referral-create-form">
+        <div class="form-group">
+          <label for="ref-from-facility" class="form-label">From Health Facility</label>
+          <input type="text" id="ref-from-facility" class="form-input" value="Chirala Primary Health Centre" required>
+        </div>
+
+        <div class="form-group">
+          <label for="ref-to-facility" class="form-label">To Specialty Hospital / Facility *</label>
+          <select id="ref-to-facility" class="form-select" required>
+            <option value="District Hospital Ongole - Cardiology Unit">District Hospital Ongole - Cardiology Unit</option>
+            <option value="RIMS General Hospital - Pulmonology Department">RIMS General Hospital - Pulmonology Department</option>
+            <option value="Community Health Centre (CHC) Bapatla">Community Health Centre (CHC) Bapatla</option>
+            <option value="District Maternity & Child Specialty Hospital">District Maternity &amp; Child Specialty Hospital</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="ref-priority" class="form-label">Priority Level *</label>
+          <select id="ref-priority" class="form-select" required>
+            <option value="Emergency">🚨 Emergency (Immediate 108 Ambulance)</option>
+            <option value="Priority">⚠️ Priority (Within 24 Hours)</option>
+            <option value="Routine">Routine Elective</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="ref-reason" class="form-label">Clinical Justification / Referral Reason *</label>
+          <textarea id="ref-reason" class="form-textarea" placeholder="e.g. Critical hypoxia unresponsive to bronchodilators, suspected severe COPD exacerbation..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="ref-notes" class="form-label">Transport / First-Aid Instructions</label>
+          <input type="text" id="ref-notes" class="form-input" placeholder="e.g. Transport via 108 Ambulance. Oxygen cylinder attached.">
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1rem;">
+          <button type="button" class="btn btn-outline" onclick="closeReferralModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Referral &rarr;</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/api.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/offline.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/doctor.js"></script>
+</body>
+</html>
