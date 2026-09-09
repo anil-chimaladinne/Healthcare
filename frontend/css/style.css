@@ -188,33 +188,30 @@ a:hover {
 .brand {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.65rem;
   text-decoration: none;
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  padding: 0.2rem 0.6rem 0.2rem 0.25rem;
-  border-radius: 10px;
+  background: transparent !important;
+  padding: 0.1rem 0;
   flex-shrink: 0;
 }
 
 .brand-icon {
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   background: linear-gradient(135deg, #0d9488, #059669);
   color: var(--white);
-  border-radius: 9px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.3rem;
+  font-size: 1.35rem;
   font-weight: 800;
   box-shadow: 0 2px 8px rgba(13, 148, 136, 0.3);
   flex-shrink: 0;
 }
 
 .brand-text h1 {
-  font-size: 1.18rem;
+  font-size: 1.25rem;
   font-weight: 800;
   color: #0f766e;
   line-height: 1.1;
@@ -223,9 +220,9 @@ a:hover {
 }
 
 .brand-text span {
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 600;
-  color: #475569;
+  color: #334155;
   display: block;
   margin-top: 0.05rem;
   white-space: nowrap;
@@ -972,18 +969,33 @@ body.page-login {
 }
 
 body.page-login .site-header {
-  background: rgba(10, 25, 47, 0.72);
+  background: rgba(8, 24, 48, 0.88) !important;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+body.page-login .site-header .brand {
+  background: transparent !important;
 }
 
 body.page-login .brand-text h1 {
-  color: #ffffff;
+  color: #ffffff !important;
+  font-size: 1.25rem !important;
+  font-weight: 800 !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) !important;
 }
 
 body.page-login .brand-text span {
-  color: rgba(255, 255, 255, 0.75);
+  color: #cbd5e1 !important;
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) !important;
+}
+
+body.page-login .header-controls {
+  background: rgba(15, 23, 42, 0.75) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
 }
 
 body.page-login .site-header .btn-outline {
@@ -998,9 +1010,9 @@ body.page-login .site-header .btn-outline:hover {
 }
 
 body.page-login #lang-select {
-  background: rgba(15, 23, 42, 0.75);
-  color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(15, 23, 42, 0.85) !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
 }
 
 .login-card-container {
