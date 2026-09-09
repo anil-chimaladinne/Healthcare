@@ -112,6 +112,13 @@ body.page-doctor {
   background-attachment: fixed;
 }
 
+body.page-specialist {
+  background: radial-gradient(circle at 80% 15%, rgba(139, 92, 246, 0.14) 0%, transparent 45%),
+              radial-gradient(circle at 15% 45%, rgba(14, 165, 233, 0.10) 0%, transparent 40%),
+              linear-gradient(180deg, #f5f3ff 0%, #f8fafc 260px, #f1f5f9 100%);
+  background-attachment: fixed;
+}
+
 body.page-referrals {
   background: radial-gradient(circle at 85% 18%, rgba(245, 158, 11, 0.10) 0%, transparent 45%),
               radial-gradient(circle at 15% 35%, rgba(99, 102, 241, 0.10) 0%, transparent 45%),
@@ -238,6 +245,7 @@ a:hover {
 
 .badge-healthworker { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; font-size: 0.85rem; }
 .badge-doctor { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; font-size: 0.85rem; }
+.badge-specialist { background: #f5f3ff; color: #6d28d9; border: 1px solid #ddd6fe; font-size: 0.85rem; }
 .badge-admin { background: #fdf4ff; color: #86198f; border: 1px solid #f5d0fe; font-size: 0.85rem; }
 
 .badge-status-dot { width: 9px; height: 9px; border-radius: 50%; background-color: currentColor; }
@@ -601,3 +609,147 @@ a:hover {
   .flow-diagram { flex-direction: column; }
   .flow-arrow { transform: rotate(90deg); }
 }
+
+/* --------------------------------------------------------------------------
+   Specialist Portal & Comprehensive Longitudinal EHR Components
+   -------------------------------------------------------------------------- */
+.card-specialist {
+  border-top: 3px solid #8b5cf6;
+}
+
+.ehr-panel-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.25rem;
+  margin-top: 1rem;
+}
+
+.ehr-section-card {
+  background: var(--slate-50);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+}
+
+.ehr-section-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--slate-800);
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ehr-nav-tabs {
+  display: flex;
+  gap: 0.5rem;
+  border-bottom: 1.5px solid var(--slate-200);
+  margin-bottom: 1.25rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+}
+
+.ehr-tab-btn {
+  background: none;
+  border: none;
+  padding: 0.6rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--slate-500);
+  border-bottom: 2.5px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: var(--transition);
+}
+
+.ehr-tab-btn:hover {
+  color: var(--slate-900);
+}
+
+.ehr-tab-btn.active {
+  color: #6d28d9;
+  border-bottom-color: #7c3aed;
+  background: #f5f3ff;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+
+.vital-trend-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0.85rem;
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-sm);
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.vital-trend-val {
+  font-weight: 800;
+  color: var(--slate-900);
+}
+
+/* --------------------------------------------------------------------------
+   PWA App Download & Offline Installation Styles
+   -------------------------------------------------------------------------- */
+.btn-install-app {
+  background: linear-gradient(135deg, #0d9488, #0f766e);
+  color: #ffffff !important;
+  border: 1px solid #14b8a6;
+  font-weight: 700;
+  font-size: 0.8125rem;
+  padding: 0.35rem 0.85rem;
+  min-height: 36px;
+  border-radius: var(--radius-full);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  box-shadow: 0 2px 8px rgba(13, 148, 136, 0.25);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-install-app:hover {
+  background: linear-gradient(135deg, #0f766e, #115e59);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(13, 148, 136, 0.35);
+  color: #ffffff !important;
+}
+
+.btn-install-app.installed {
+  background: #ecfdf5;
+  color: #065f46 !important;
+  border: 1px solid #a7f3d0;
+  box-shadow: none;
+  cursor: default;
+}
+
+.pwa-device-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  background: #ffffff;
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.pwa-step-number {
+  background: #f0fdfa;
+  color: #0d9488;
+  border: 1.5px solid #99f6e4;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+}
+
+

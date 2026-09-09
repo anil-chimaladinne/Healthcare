@@ -64,6 +64,8 @@ function redirectIfLoggedIn() {
   if (user && user.role) {
     if (user.role.includes("Health Worker") || user.role.includes("ASHA")) {
       window.location.replace("patient.html");
+    } else if (user.role.includes("Specialist")) {
+      window.location.replace("specialist.html");
     } else if (user.role.includes("Doctor")) {
       window.location.replace("doctor.html");
     } else {
@@ -112,6 +114,8 @@ function setupGlobalHeader(user) {
     userRoleEl.className = "badge";
     if (user.role.includes("Health Worker") || user.role.includes("ASHA")) {
       userRoleEl.classList.add("badge-healthworker");
+    } else if (user.role.includes("Specialist")) {
+      userRoleEl.classList.add("badge-specialist");
     } else if (user.role.includes("Doctor")) {
       userRoleEl.classList.add("badge-doctor");
     } else {
@@ -133,54 +137,74 @@ function applyRolePermissions() {
   const user = getCurrentUser();
   if (!user) return;
 
-  const currentPath = window.location.pathname.toLowerCase();
-  const isAsha = user.role.includes("Health Worker") || user.role.includes("ASHA");
-  const isDoctor = user.role.includes("Doctor");
-  const isAdmin = user.role.includes("Administrator") || user.role.includes("Admin");
+  const currentPath = (window.location.pathname || "").toLowerCase();
+  const roleStr = (user.role || "").toLowerCase();
+  const usernameStr = (user.username || "").toLowerCase();
+  const isAsha = roleStr.includes("health worker") || roleStr.includes("asha") || roleStr.includes("anm") || usernameStr === "healthworker";
+  const isSpecialist = roleStr.includes("specialist") || usernameStr === "specialist";
+  const isDoctor = !isSpecialist && (roleStr.includes("doctor") || usernameStr === "doctor");
+  const isAdmin = roleStr.includes("admin") || usernameStr === "admin";
 
   // 1. Route Protection & Redirects
-  if (isAsha && currentPath.includes("doctor.html")) {
+  if (isAsha && (currentPath.includes("doctor.html") || currentPath.includes("specialist.html") || currentPath.includes("followups.html"))) {
     window.location.replace("patient.html");
     return;
   }
-  if (isDoctor && (currentPath.includes("patient.html") || currentPath.includes("followups.html"))) {
+  if (isDoctor && (currentPath.includes("patient.html") || currentPath.includes("specialist.html") || currentPath.includes("followups.html"))) {
     window.location.replace("doctor.html");
     return;
   }
-  if (isAdmin && (currentPath.includes("patient.html") || currentPath.includes("doctor.html") || currentPath.includes("followups.html"))) {
+  if (isSpecialist && (currentPath.includes("patient.html") || currentPath.includes("doctor.html") || currentPath.includes("followups.html"))) {
+    window.location.replace("specialist.html");
+    return;
+  }
+  if (isAdmin && (currentPath.includes("patient.html") || currentPath.includes("doctor.html") || currentPath.includes("specialist.html") || currentPath.includes("followups.html"))) {
     window.location.replace("dashboard.html");
     return;
   }
 
   // 2. Filter Navigation Links across all pages
-  const navLinks = document.querySelectorAll(".sidebar-nav .nav-link");
+  const navLinks = document.querySelectorAll(".sidebar-nav .nav-link, a[href*='.html']");
   navLinks.forEach((link) => {
     const href = (link.getAttribute("href") || "").toLowerCase();
 
     if (isAsha) {
-      // ASHA sees: Dashboard, Patients & Doorstep, Referrals, Follow-ups
-      if (href.includes("doctor.html")) {
+      // ASHA sees: Dashboard, Patients & Doorstep, Referrals (Follow-ups, Doctor Queue, Specialist Queue removed)
+      if (href.includes("doctor.html") || href.includes("specialist.html") || href.includes("followups.html")) {
         link.style.display = "none";
-      } else {
+      } else if (href.includes("dashboard") || href.includes("patient") || href.includes("referrals")) {
         link.style.display = "flex";
       }
     } else if (isDoctor) {
       // Doctor sees: Dashboard, Doctor Queue, Referrals
-      if (href.includes("patient.html") || href.includes("followups.html")) {
+      if (href.includes("patient.html") || href.includes("specialist.html") || href.includes("followups.html")) {
         link.style.display = "none";
-      } else {
+      } else if (href.includes("dashboard") || href.includes("doctor") || href.includes("referrals")) {
+        link.style.display = "flex";
+      }
+    } else if (isSpecialist) {
+      // Specialist sees: Dashboard, Specialist Workspace, Referrals
+      if (href.includes("patient.html") || href.includes("doctor.html") || href.includes("followups.html")) {
+        link.style.display = "none";
+      } else if (href.includes("dashboard") || href.includes("specialist") || href.includes("referrals")) {
         link.style.display = "flex";
       }
     } else if (isAdmin) {
-      // Admin sees ONLY Admin-relevant options: Dashboard & Referrals (Network Monitor)
-      // Admin does NOT see ASHA Doorstep intake or Doctor clinical queue or Follow-up visits
+      // Admin sees: Dashboard, Specialist Queue & Referrals
       if (href.includes("patient.html") || href.includes("doctor.html") || href.includes("followups.html")) {
         link.style.display = "none";
-      } else {
+      } else if (href.includes("dashboard") || href.includes("referrals") || href.includes("specialist")) {
         link.style.display = "flex";
       }
     }
   });
+
+  // Specifically hide follow-ups for ASHA everywhere
+  if (isAsha) {
+    document.querySelectorAll('a[href*="followups.html"], #card-stat-followups').forEach(el => {
+      el.style.display = "none";
+    });
+  }
 }
 
 // Global click event delegation for logout (works everywhere regardless of script load timing)
@@ -246,6 +270,8 @@ document.addEventListener("DOMContentLoaded", () => {
           // Role-specific landing page
           if (response.role.includes("Health Worker")) {
             window.location.href = "patient.html";
+          } else if (response.role.includes("Specialist")) {
+            window.location.href = "specialist.html";
           } else if (response.role.includes("Doctor")) {
             window.location.href = "doctor.html";
           } else {

@@ -69,6 +69,14 @@ if FRONTEND_DIR.exists():
         app.mount("/css", StaticFiles(directory=FRONTEND_DIR / "css"), name="css")
     if (FRONTEND_DIR / "js").exists():
         app.mount("/js", StaticFiles(directory=FRONTEND_DIR / "js"), name="js")
+    if (FRONTEND_DIR / "icons").exists():
+        app.mount("/icons", StaticFiles(directory=FRONTEND_DIR / "icons"), name="icons")
+
+    @app.get("/favicon.ico", include_in_schema=False)
+    def read_favicon():
+        if (FRONTEND_DIR / "icons" / "favicon.ico").exists():
+            return FileResponse(FRONTEND_DIR / "icons" / "favicon.ico")
+        return FileResponse(FRONTEND_DIR / "manifest.json")
 
     # Serve specific HTML routes and root
     @app.get("/", include_in_schema=False)
@@ -94,6 +102,10 @@ if FRONTEND_DIR.exists():
     @app.get("/doctor.html", include_in_schema=False)
     def read_doctor():
         return FileResponse(FRONTEND_DIR / "doctor.html")
+
+    @app.get("/specialist.html", include_in_schema=False)
+    def read_specialist():
+        return FileResponse(FRONTEND_DIR / "specialist.html")
 
     @app.get("/referrals.html", include_in_schema=False)
     def read_referrals():

@@ -2,16 +2,59 @@
   "name": "SevaHealth - Offline-First Rural Healthcare",
   "short_name": "SevaHealth",
   "description": "Offline-First Smart Healthcare Support Platform for Rural India",
-  "start_url": "/dashboard.html",
+  "id": "/index.html",
+  "start_url": "/index.html",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#f8fafc",
   "theme_color": "#0d9488",
-  "orientation": "portrait-primary",
+  "orientation": "any",
+  "categories": ["medical", "health", "productivity"],
   "icons": [
     {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230d9488'/><text x='50%' y='65%' font-size='60' text-anchor='middle' fill='white'>✚</text></svg>",
-      "sizes": "192x192 512x512",
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
       "type": "image/svg+xml"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Doorstep Visit & Triage",
+      "url": "/patient.html",
+      "description": "Start frontline doorstep intake and smart triage"
+    },
+    {
+      "name": "Doctor Queue",
+      "url": "/doctor.html",
+      "description": "Open priority doctor consultation queue"
+    },
+    {
+      "name": "Specialist Workspace",
+      "url": "/specialist.html",
+      "description": "District hospital specialist referral queue"
+    },
+    {
+      "name": "Referral Directory",
+      "url": "/referrals.html",
+      "description": "Track full-loop specialist referrals"
     }
   ]
 }

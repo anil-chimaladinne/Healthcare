@@ -6,6 +6,11 @@
   <title>SevaHealth - Offline-First Smart Healthcare for Rural India</title>
   <meta name="description" content="Connected care for rural patients, ASHA workers, PHCs and doctors—even with unreliable internet. SIH 2026 Prototype.">
   <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <meta name="theme-color" content="#0d9488">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -30,6 +35,11 @@
           <option value="en">English</option>
           <option value="te">తెలుగు (Telugu)</option>
         </select>
+
+        <!-- PWA Install App Button -->
+        <button id="btn-install-pwa" class="btn-install-app" onclick="triggerPWAInstall()" title="Download & Install SevaHealth to use offline anytime">
+          <span>📲</span> <span data-i18n="btn_install_app">Install App</span>
+        </button>
 
         <a href="login.html" class="btn btn-outline btn-sm" data-i18n="sign_in">Sign In</a>
         <a href="login.html" class="btn btn-primary btn-sm">Explore Prototype &rarr;</a>
@@ -130,5 +140,6 @@
   </footer>
 
   <script src="js/i18n.js"></script>
+  <script src="js/offline.js"></script>
 </body>
 </html>

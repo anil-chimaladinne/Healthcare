@@ -44,10 +44,11 @@ def run_tests():
     print(f"  -> PASSED: {body['message']}")
 
     # 2. Authentication
-    print("\n[2/9] Testing POST /api/auth/login (Health Worker, Doctor, Admin)...")
+    print("\n[2/9] Testing POST /api/auth/login (Health Worker, Doctor, Specialist, Admin)...")
     demo_creds = [
         ("healthworker", "health123", "Health Worker"),
         ("doctor", "doctor123", "Doctor"),
+        ("specialist", "specialist123", "Specialist"),
         ("admin", "admin123", "Administrator")
     ]
     for username, pwd, role in demo_creds:
@@ -151,6 +152,17 @@ def run_tests():
     status, refs = make_request("/api/referrals")
     assert status == 200 and len(refs) >= 1
     print(f"  -> PASSED: Retrieved {len(refs)} active referral loops.")
+
+    # Test Specialist Clinical Review & Status Advance
+    spec_review_payload = {
+        "status": "Accepted",
+        "specialist_name": "Dr. Priya Sharma (Cardiologist)",
+        "specialist_notes": "Patient admitted to Cardiology Unit. ECG reveals acute ischemic changes. Commenced continuous oxygen and heparin.",
+        "recommended_action": "Admitted to Cardiology ICU Bed #3"
+    }
+    status, rev_res = make_request(f"/api/referrals/{ref_id}/specialist-review", method="PATCH", data=spec_review_payload)
+    assert status == 200 and rev_res["status"] == "Accepted"
+    print(f"  -> PASSED Specialist Review: {rev_res['message']} (Status: {rev_res['status']})")
 
     # 7. Follow-ups & Demo SMS Reminder
     print("\n[7/9] Testing POST /api/followups & Demo SMS...")

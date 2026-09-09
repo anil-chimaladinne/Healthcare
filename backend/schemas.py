@@ -95,6 +95,12 @@ class PatientSummary(BaseModel):
     latest_spo2: Optional[int] = None
     latest_bp: Optional[str] = None
     queue_status: Optional[str] = "Registered"
+    has_referral: Optional[bool] = False
+    referral_id: Optional[str] = None
+    referral_to_facility: Optional[str] = None
+    referral_priority: Optional[str] = None
+    referral_status: Optional[str] = None
+    referral_created_by: Optional[str] = None
 
 
 class LongitudinalTimelineEvent(BaseModel):
@@ -155,6 +161,13 @@ class ReferralCreate(BaseModel):
 class ReferralStatusUpdate(BaseModel):
     status: str  # Created, Sent, Accepted, In Progress, Completed
     notes: Optional[str] = None
+
+
+class SpecialistReviewRequest(BaseModel):
+    status: str = "Accepted"  # Accepted, In Progress, Completed, Admitted, Discharged
+    specialist_name: Optional[str] = "Dr. Priya Sharma"
+    specialist_notes: str
+    recommended_action: Optional[str] = None
 
 
 class ReferralResponse(BaseModel):
@@ -218,15 +231,22 @@ class DashboardResponse(BaseModel):
 
 # --- Batch Offline Sync Request ---
 class OfflineRecordItem(BaseModel):
-    type: str  # 'patient', 'vitals', 'triage', 'consultation', 'referral', 'followup'
+    id: Optional[Any] = None
+    type: str  # 'patient', 'vitals', 'triage', 'consultation', 'referral', 'followup', 'followup_status'
     client_temp_id: Optional[str] = None
     data: dict
-    timestamp: str
+    timestamp: Optional[str] = None
+
+    class Config:
+        extra = "ignore"
 
 
 class BatchSyncRequest(BaseModel):
     records: List[OfflineRecordItem]
     synced_by: Optional[str] = "Health Worker"
+
+    class Config:
+        extra = "ignore"
 
 
 class BatchSyncResponse(BaseModel):
@@ -235,3 +255,4 @@ class BatchSyncResponse(BaseModel):
     failed_count: int
     message: str
     mapping: dict = {}  # temporary client ID -> server ID
+

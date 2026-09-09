@@ -6,6 +6,11 @@
   <title>Referrals Management - SevaHealth</title>
   <meta name="description" content="Track full-loop specialist referrals from Sub-Centres to District Specialty Hospitals.">
   <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <meta name="theme-color" content="#0d9488">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -30,13 +35,17 @@
           <option value="te">తెలుగు</option>
         </select>
 
+        <button id="btn-toggle-offline-demo" class="btn btn-outline btn-sm" onclick="toggleSimulatedOffline()">
+          📡 Simulate Offline
+        </button>
+
         <span id="network-status-badge" class="badge badge-status-online">
           <span class="badge-status-dot status-online"></span>
           <span>ONLINE</span>
         </span>
 
         <span id="sync-status-indicator" class="badge badge-primary">☁️ All synced</span>
-        <button id="btn-sync-now" class="btn btn-primary btn-sm" data-i18n="sync_now">Sync Now</button>
+        <button id="btn-sync-now" class="btn btn-primary btn-sm" onclick="syncPendingRecords()" data-i18n="sync_now">Sync Now</button>
 
         <span id="user-role-badge" class="badge">Role</span>
         <button id="btn-logout" class="btn btn-danger-outline btn-sm" onclick="logout()" data-i18n="sign_out">Sign Out</button>
@@ -88,6 +97,34 @@
 
       <!-- Referrals Table -->
       <div style="background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--slate-200); padding: 1.5rem; box-shadow: var(--shadow-xs);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 1rem;">
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--slate-900);">
+              📋 Referral Directory
+            </h3>
+            <span id="referrals-count-badge" class="badge badge-primary">Loading...</span>
+          </div>
+
+          <!-- Referral Search & Filter Controls -->
+          <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+            <div style="width: 280px;">
+              <input
+                type="text"
+                id="search-referral-input"
+                class="form-input"
+                placeholder="🔍 Search patient, ID, hospital, reason..."
+                style="min-height: 38px;"
+              >
+            </div>
+            <select id="filter-referral-priority" class="form-select" style="min-height: 38px; width: auto;">
+              <option value="">All Priorities</option>
+              <option value="Emergency">🚨 Emergency</option>
+              <option value="Priority">⚠️ Priority</option>
+              <option value="Routine">Routine</option>
+            </select>
+          </div>
+        </div>
+
         <div class="table-responsive">
           <table class="data-table">
             <thead>
@@ -100,10 +137,11 @@
                 <th>Priority</th>
                 <th>Status Loop</th>
                 <th>Created Date</th>
+                <th style="text-align: right;">EHR Record</th>
               </tr>
             </thead>
             <tbody id="referrals-list-body">
-              <tr><td colspan="8" style="text-align: center; padding: 2rem;">Loading referrals...</td></tr>
+              <tr><td colspan="9" style="text-align: center; padding: 2rem;">Loading referrals...</td></tr>
             </tbody>
           </table>
         </div>
@@ -170,6 +208,32 @@
           <button type="submit" class="btn btn-primary">Create Referral &rarr;</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- Longitudinal EHR Care Journey Timeline Modal -->
+  <div id="ehr-timeline-modal" class="modal-backdrop" style="display: none;">
+    <div class="modal-card" style="max-width: 750px;">
+      <div class="modal-header">
+        <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--slate-900);" data-i18n="timeline_title">
+          🌟 Longitudinal Care Journey Timeline
+        </h3>
+        <button class="modal-close-btn" onclick="closeEhrModal()">&times;</button>
+      </div>
+      <div id="ehr-timeline-content"></div>
+    </div>
+  </div>
+
+  <!-- FHIR / ABDM JSON Preview Modal -->
+  <div id="fhir-preview-modal" class="modal-backdrop" style="display: none;">
+    <div class="modal-card" style="max-width: 650px;">
+      <div class="modal-header">
+        <h3 style="font-size: 1.15rem; font-weight: 800;" data-i18n="fhir_preview">
+          🔗 FHIR R4 / ABDM Care-Context JSON Preview
+        </h3>
+        <button class="modal-close-btn" onclick="closeFhirModal()">&times;</button>
+      </div>
+      <pre id="fhir-json-code" style="background: #0f172a; color: #38bdf8; padding: 1rem; border-radius: var(--radius-md); font-size: 0.75rem; overflow-x: auto; max-height: 400px; font-family: monospace;"></pre>
     </div>
   </div>
 

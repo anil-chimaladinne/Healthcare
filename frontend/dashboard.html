@@ -6,6 +6,11 @@
   <title>Dashboard - SevaHealth</title>
   <meta name="description" content="Operational rural healthcare dashboard.">
   <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <meta name="theme-color" content="#0d9488">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -32,7 +37,7 @@
         </select>
 
         <!-- Simulated Offline Toggle for SIH Demonstration -->
-        <button id="btn-toggle-offline-demo" class="btn btn-outline btn-sm">
+        <button id="btn-toggle-offline-demo" class="btn btn-outline btn-sm" onclick="toggleSimulatedOffline()">
           📡 Simulate Offline
         </button>
 
@@ -44,7 +49,7 @@
 
         <!-- Sync Pending Badge & Sync Now Button -->
         <span id="sync-status-indicator" class="badge badge-primary">☁️ All synced</span>
-        <button id="btn-sync-now" class="btn btn-primary btn-sm" data-i18n="sync_now">Sync Now</button>
+        <button id="btn-sync-now" class="btn btn-primary btn-sm" onclick="syncPendingRecords()" data-i18n="sync_now">Sync Now</button>
 
         <!-- Role Badge & Logout -->
         <span id="user-role-badge" class="badge">Role</span>
@@ -129,6 +134,19 @@
         </div>
       </div>
 
+      <!-- Specialist Quick Action -->
+      <div id="specialist-quick-actions" style="display: none; background: linear-gradient(135deg, #6d28d9, #4c1d95); color: white; padding: 1.25rem 1.5rem; border-radius: var(--radius-lg); margin-bottom: 1.75rem; box-shadow: var(--shadow-sm);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <h3 style="font-size: 1.15rem; font-weight: 700;">🩺 Specialist Referral Workspace</h3>
+            <p style="font-size: 0.875rem; opacity: 0.9;">Inspect inbound referred patients, view complete longitudinal EHR records, and provide specialist feedback.</p>
+          </div>
+          <a href="specialist.html" class="btn" style="background: white; color: #6d28d9; font-weight: 700;">
+            Open Specialist Queue &rarr;
+          </a>
+        </div>
+      </div>
+
       <!-- Admin Quick Action -->
       <div id="admin-quick-actions" style="display: none; background: linear-gradient(135deg, #4f46e5, #4338ca); color: white; padding: 1.25rem 1.5rem; border-radius: var(--radius-lg); margin-bottom: 1.75rem; box-shadow: var(--shadow-sm);">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
@@ -145,8 +163,8 @@
       <!-- KPI Cards Grid (Role-Filtered) -->
       <div class="cards-grid">
         
-        <!-- Total Patients (ASHA / Doctor / Admin) -->
-        <div class="stat-card card-asha card-doctor card-admin" id="card-stat-patients">
+        <!-- Total Patients (ASHA / Doctor / Specialist / Admin) -->
+        <div class="stat-card card-asha card-doctor card-specialist card-admin" id="card-stat-patients">
           <div class="stat-card-header">
             <span class="stat-title" data-i18n="stat_total_patients">Total Patients</span>
             <div class="stat-icon" style="background: #eff6ff; color: #3b82f6;">👥</div>
@@ -175,8 +193,8 @@
           <div class="stat-footer">In doctor triage queue</div>
         </div>
 
-        <!-- High Risk RED (ASHA / Doctor / Admin) -->
-        <div class="stat-card card-asha card-doctor card-admin" id="card-stat-red">
+        <!-- High Risk RED (ASHA / Doctor / Specialist / Admin) -->
+        <div class="stat-card card-asha card-doctor card-specialist card-admin" id="card-stat-red">
           <div class="stat-card-header">
             <span class="stat-title" data-i18n="stat_high_risk">High-Risk (RED)</span>
             <div class="stat-icon" style="background: #fef2f2; color: #ef4444;">🚨</div>
@@ -185,8 +203,8 @@
           <div class="stat-footer">Emergency attention flagged</div>
         </div>
 
-        <!-- Pending Referrals (ASHA / Doctor / Admin) -->
-        <div class="stat-card card-asha card-doctor card-admin" id="card-stat-referrals">
+        <!-- Pending Referrals (ASHA / Doctor / Specialist / Admin) -->
+        <div class="stat-card card-asha card-doctor card-specialist card-admin" id="card-stat-referrals">
           <div class="stat-card-header">
             <span class="stat-title" data-i18n="stat_pending_referrals">Pending Referrals</span>
             <div class="stat-icon" style="background: #f0fdfa; color: #0d9488;">🚑</div>
@@ -195,8 +213,8 @@
           <div class="stat-footer">Escalated to specialty hospital</div>
         </div>
 
-        <!-- Follow-ups Due (ASHA Only) -->
-        <div class="stat-card card-asha" id="card-stat-followups">
+        <!-- Follow-ups Due (Doctor / Admin) -->
+        <div class="stat-card card-doctor card-admin" id="card-stat-followups">
           <div class="stat-card-header">
             <span class="stat-title" data-i18n="stat_followups_due">Follow-ups Due</span>
             <div class="stat-icon" style="background: #f5f3ff; color: #8b5cf6;">📋</div>

@@ -6,6 +6,11 @@
   <title>Follow-ups & Reminders - SevaHealth</title>
   <meta name="description" content="Community care continuity, follow-up scheduling, and demo SMS reminders.">
   <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <meta name="theme-color" content="#0d9488">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -30,13 +35,17 @@
           <option value="te">తెలుగు</option>
         </select>
 
+        <button id="btn-toggle-offline-demo" class="btn btn-outline btn-sm" onclick="toggleSimulatedOffline()">
+          📡 Simulate Offline
+        </button>
+
         <span id="network-status-badge" class="badge badge-status-online">
           <span class="badge-status-dot status-online"></span>
           <span>ONLINE</span>
         </span>
 
         <span id="sync-status-indicator" class="badge badge-primary">☁️ All synced</span>
-        <button id="btn-sync-now" class="btn btn-primary btn-sm" data-i18n="sync_now">Sync Now</button>
+        <button id="btn-sync-now" class="btn btn-primary btn-sm" onclick="syncPendingRecords()" data-i18n="sync_now">Sync Now</button>
 
         <span id="user-role-badge" class="badge">Role</span>
         <button id="btn-logout" class="btn btn-danger-outline btn-sm" onclick="logout()" data-i18n="sign_out">Sign Out</button>

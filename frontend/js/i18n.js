@@ -22,6 +22,8 @@ const TRANSLATIONS = {
     all_synced: "All records synced",
     syncing: "Syncing records...",
     pending_sync: "records waiting to sync",
+    btn_install_app: "Install App",
+    app_installed: "Installed (Offline)",
 
     // Navigation
     nav_dashboard: "Dashboard",
@@ -107,6 +109,8 @@ const TRANSLATIONS = {
     all_synced: "అన్ని రికార్డులు సింక్ అయ్యాయి",
     syncing: "సింక్ అవుతోంది...",
     pending_sync: "రికార్డులు సింక్ చేయాల్సి ఉంది",
+    btn_install_app: "యాప్ డౌన్‌లోడ్ / ఇన్‌స్టాల్",
+    app_installed: "ఇన్‌స్టాల్ చేయబడింది",
 
     // Navigation
     nav_dashboard: "డాష్‌బోర్డ్",

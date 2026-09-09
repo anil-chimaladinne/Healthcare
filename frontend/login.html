@@ -6,6 +6,11 @@
   <title>Login - SevaHealth</title>
   <meta name="description" content="Sign in to SevaHealth role portals for Health Worker, Doctor, and Administrator.">
   <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <meta name="theme-color" content="#0d9488">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -86,12 +91,15 @@
           ⚡ SIH Quick Role Selector (Click to Autofill)
         </h4>
 
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem;">
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem;">
           <button type="button" class="btn btn-outline btn-sm" style="font-size: 0.75rem; padding: 0.5rem 0.25rem; text-align: center;" onclick="setDemoCredentials('healthworker', 'health123')">
             🏥 ASHA / HW
           </button>
           <button type="button" class="btn btn-outline btn-sm" style="font-size: 0.75rem; padding: 0.5rem 0.25rem; text-align: center;" onclick="setDemoCredentials('doctor', 'doctor123')">
-            👨‍⚕️ Doctor
+            👨‍⚕️ Doctor (MO)
+          </button>
+          <button type="button" class="btn btn-outline btn-sm" style="font-size: 0.75rem; padding: 0.5rem 0.25rem; text-align: center; border-color: #8b5cf6; color: #6d28d9; background: #f5f3ff;" onclick="setDemoCredentials('specialist', 'specialist123')">
+            🩺 Specialist (Hospital)
           </button>
           <button type="button" class="btn btn-outline btn-sm" style="font-size: 0.75rem; padding: 0.5rem 0.25rem; text-align: center;" onclick="setDemoCredentials('admin', 'admin123')">
             ⚙️ Admin
@@ -99,7 +107,7 @@
         </div>
 
         <p style="font-size: 0.75rem; color: var(--slate-400); text-align: center; margin-top: 0.75rem;">
-          Passwords: <code>health123</code> &bull; <code>doctor123</code> &bull; <code>admin123</code>
+          Demo Passwords: <code>health123</code> &bull; <code>doctor123</code> &bull; <code>specialist123</code> &bull; <code>admin123</code>
         </p>
       </div>
 
@@ -112,6 +120,7 @@
 
   <script src="js/api.js"></script>
   <script src="js/i18n.js"></script>
+  <script src="js/offline.js"></script>
   <script src="js/auth.js"></script>
 </body>
 </html>

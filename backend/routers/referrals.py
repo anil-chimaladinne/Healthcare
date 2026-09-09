@@ -3,12 +3,12 @@ SevaHealth - Referral Management Router
 Tracks full-loop referrals from ASHA / Sub-Centres to Primary Health Centres and District Specialty Hospitals.
 """
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Query
 from typing import List, Optional
 from datetime import datetime
 
 from backend.database import get_db_connection
-from backend.schemas import ReferralCreate, ReferralResponse, ReferralStatusUpdate
+from backend.schemas import ReferralCreate, ReferralResponse, ReferralStatusUpdate, SpecialistReviewRequest
 
 router = APIRouter(prefix="/api/referrals", tags=["Referrals"])
 
@@ -77,17 +77,27 @@ def create_referral(payload: ReferralCreate):
 
 
 @router.get("", response_model=List[ReferralResponse], summary="List All Referrals")
-def list_referrals():
-    """Returns all active and historical referrals with patient names."""
+def list_referrals(search: Optional[str] = None):
+    """Returns all active and historical referrals with patient names, with optional search filter."""
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    cursor.execute("""
-        SELECT r.*, p.name as patient_name
-        FROM referrals r
-        LEFT JOIN patients p ON r.patient_id = p.patient_id
-        ORDER BY r.id DESC
-    """)
+    if search and isinstance(search, str) and search.strip():
+        s = f"%{search.strip()}%"
+        cursor.execute("""
+            SELECT r.*, p.name as patient_name
+            FROM referrals r
+            LEFT JOIN patients p ON r.patient_id = p.patient_id
+            WHERE r.referral_id LIKE ? OR r.patient_id LIKE ? OR p.name LIKE ? OR r.to_facility LIKE ? OR r.from_facility LIKE ? OR r.reason LIKE ?
+            ORDER BY r.id DESC
+        """, (s, s, s, s, s, s))
+    else:
+        cursor.execute("""
+            SELECT r.*, p.name as patient_name
+            FROM referrals r
+            LEFT JOIN patients p ON r.patient_id = p.patient_id
+            ORDER BY r.id DESC
+        """)
     rows = cursor.fetchall()
     conn.close()
 
@@ -127,3 +137,45 @@ def update_referral_status(referral_id: str, payload: ReferralStatusUpdate):
     conn.commit()
     conn.close()
     return {"success": True, "referral_id": referral_id, "status": payload.status}
+
+
+@router.patch("/{referral_id}/specialist-review", summary="Submit Specialist Clinical Review & Feedback")
+def submit_specialist_review(referral_id: str, payload: SpecialistReviewRequest):
+    """
+    Hospital specialist records clinical evaluation notes, admission/treatment advice,
+    and advances the referral lifecycle status.
+    """
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Check if referral exists
+    cursor.execute("SELECT * FROM referrals WHERE referral_id = ?", (referral_id,))
+    ref = cursor.fetchone()
+    if not ref:
+        conn.close()
+        raise HTTPException(status_code=404, detail="Referral not found")
+
+    now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    specialist_entry = f" [Specialist Review by {payload.specialist_name or 'Specialist'} ({now_str})]: {payload.specialist_notes}"
+    if payload.recommended_action:
+        specialist_entry += f" | Action Plan: {payload.recommended_action}"
+
+    existing_notes = ref["notes"] or ""
+    updated_notes = (existing_notes + "\n" + specialist_entry).strip()
+
+    cursor.execute("""
+        UPDATE referrals 
+        SET status = ?, notes = ?, updated_at = ?
+        WHERE referral_id = ?
+    """, (payload.status, updated_notes, now_str, referral_id))
+
+    conn.commit()
+    conn.close()
+
+    return {
+        "success": True,
+        "referral_id": referral_id,
+        "status": payload.status,
+        "specialist_notes": updated_notes,
+        "message": "Specialist clinical review recorded successfully."
+    }

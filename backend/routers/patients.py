@@ -125,7 +125,10 @@ def list_patients(search: Optional[str] = Query(None, description="Search by nam
                p.aadhaar_last4, p.registered_by, p.created_at,
                t.risk_level as latest_risk_level, t.routed_to as queue_status,
                v.spo2 as latest_spo2, 
-               v.bp_systolic || '/' || v.bp_diastolic as latest_bp
+               v.bp_systolic || '/' || v.bp_diastolic as latest_bp,
+               ref.referral_id, ref.to_facility as referral_to_facility,
+               ref.priority as referral_priority, ref.status as referral_status,
+               ref.created_by as referral_created_by
         FROM patients p
         LEFT JOIN (
             SELECT t1.patient_id, t1.risk_level, t1.routed_to 
@@ -141,10 +144,17 @@ def list_patients(search: Optional[str] = Query(None, description="Search by nam
                 SELECT patient_id, MAX(id) as max_id FROM vitals GROUP BY patient_id
             ) v2 ON v1.id = v2.max_id
         ) v ON p.patient_id = v.patient_id
+        LEFT JOIN (
+            SELECT r1.patient_id, r1.referral_id, r1.to_facility, r1.priority, r1.status, r1.created_by
+            FROM referrals r1
+            INNER JOIN (
+                SELECT patient_id, MAX(id) as max_id FROM referrals GROUP BY patient_id
+            ) r2 ON r1.id = r2.max_id
+        ) ref ON p.patient_id = ref.patient_id
     """
 
     params = []
-    if search:
+    if search and isinstance(search, str) and search.strip():
         s = f"%{search.strip()}%"
         query += " WHERE p.name LIKE ? OR p.patient_id LIKE ? OR p.village LIKE ? OR p.phone LIKE ?"
         params = [s, s, s, s]
@@ -169,7 +179,13 @@ def list_patients(search: Optional[str] = Query(None, description="Search by nam
             latest_risk_level=r["latest_risk_level"] or "GREEN",
             latest_spo2=r["latest_spo2"],
             latest_bp=r["latest_bp"] if r["latest_bp"] != "/" else None,
-            queue_status=r["queue_status"] or "Registered"
+            queue_status=r["queue_status"] or "Registered",
+            has_referral=bool(r["referral_id"]),
+            referral_id=r["referral_id"],
+            referral_to_facility=r["referral_to_facility"],
+            referral_priority=r["referral_priority"],
+            referral_status=r["referral_status"],
+            referral_created_by=r["referral_created_by"]
         )
         for r in rows
     ]

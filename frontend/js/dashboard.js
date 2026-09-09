@@ -1,6 +1,6 @@
 /**
  * SevaHealth - Main Dashboard Controller
- * Aggregates live KPI cards, role-based workflows, and quick actions.
+ * Aggregates live KPI cards, role-based workflows, and quick actions with offline resilience.
  */
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -43,8 +43,10 @@ function renderUserInfo(user) {
   if (userRoleEl) {
     userRoleEl.textContent = user.role;
     userRoleEl.className = "badge";
-    if (user.role.includes("Health Worker")) {
+    if (user.role.includes("Health Worker") || user.role.includes("ASHA")) {
       userRoleEl.classList.add("badge-healthworker");
+    } else if (user.role.includes("Specialist")) {
+      userRoleEl.classList.add("badge-specialist");
     } else if (user.role.includes("Doctor")) {
       userRoleEl.classList.add("badge-doctor");
     } else {
@@ -59,15 +61,18 @@ function renderUserInfo(user) {
   // Show/Hide Role-Specific Dashboard Sections & Cards
   const ashaSection = document.getElementById("asha-quick-actions");
   const doctorSection = document.getElementById("doctor-quick-actions");
+  const specialistSection = document.getElementById("specialist-quick-actions");
   const adminQuickSection = document.getElementById("admin-quick-actions");
   const adminSection = document.getElementById("admin-inventory-section");
 
   const isAsha = user.role.includes("Health Worker") || user.role.includes("ASHA");
-  const isDoctor = user.role.includes("Doctor");
+  const isSpecialist = user.role.includes("Specialist");
+  const isDoctor = !isSpecialist && user.role.includes("Doctor");
   const isAdmin = user.role.includes("Administrator") || user.role.includes("Admin");
 
   if (ashaSection) ashaSection.style.display = isAsha ? "block" : "none";
   if (doctorSection) doctorSection.style.display = isDoctor ? "block" : "none";
+  if (specialistSection) specialistSection.style.display = isSpecialist ? "block" : "none";
   if (adminQuickSection) adminQuickSection.style.display = isAdmin ? "block" : "none";
   if (adminSection) adminSection.style.display = isAdmin ? "block" : "none";
 
@@ -77,6 +82,8 @@ function renderUserInfo(user) {
       card.style.display = card.classList.contains("card-asha") ? "block" : "none";
     } else if (isDoctor) {
       card.style.display = card.classList.contains("card-doctor") ? "block" : "none";
+    } else if (isSpecialist) {
+      card.style.display = card.classList.contains("card-specialist") ? "block" : "none";
     } else if (isAdmin) {
       card.style.display = card.classList.contains("card-admin") ? "block" : "none";
     } else {
@@ -86,7 +93,7 @@ function renderUserInfo(user) {
 }
 
 /**
- * Fetch dashboard data from backend API
+ * Fetch dashboard data from backend API or local offline storage
  */
 async function loadDashboardMetrics() {
   try {
@@ -130,13 +137,14 @@ function renderRecentPatients(patients) {
   }
 
   container.innerHTML = patients.map((p) => {
-    const riskClass = p.latest_risk_level === 'RED' ? 'badge-risk-red' : (p.latest_risk_level === 'YELLOW' ? 'badge-risk-yellow' : 'badge-risk-green');
+    const risk = p.latest_risk_level || (p.triage ? p.triage.risk_level : 'GREEN');
+    const riskClass = risk === 'RED' ? 'badge-risk-red' : (risk === 'YELLOW' ? 'badge-risk-yellow' : 'badge-risk-green');
     return `
       <tr>
         <td><strong class="code-font">${p.patient_id}</strong></td>
         <td><strong>${p.name}</strong><br><small class="text-muted">${p.age}y &bull; ${p.gender}</small></td>
         <td>${p.village}</td>
-        <td><span class="badge ${riskClass}">${p.latest_risk_level}</span></td>
+        <td><span class="badge ${riskClass}">${risk}</span></td>
         <td><small>SpO2: <strong>${p.latest_spo2 ? p.latest_spo2 + '%' : '--'}</strong></small></td>
         <td>
           <a href="patient.html?id=${p.patient_id}" class="btn btn-outline btn-sm">
@@ -153,7 +161,6 @@ function renderInventoryWidget(meds) {
   if (!container) return;
 
   container.innerHTML = meds.map((m) => {
-    const isLow = m.status === 'Low Stock' || m.status === 'Unavailable';
     return `
       <tr>
         <td><strong>${m.name}</strong><br><small class="text-muted">${m.category}</small></td>

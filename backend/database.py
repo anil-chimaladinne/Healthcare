@@ -204,6 +204,7 @@ def seed_demo_data(cursor, conn):
     demo_users = [
         ("Anitha Rao", "healthworker", "health123", "Health Worker", "Ramapuram Sub-Centre"),
         ("Dr. Suresh Kumar", "doctor", "doctor123", "Doctor", "Chirala Primary Health Centre"),
+        ("Dr. Priya Sharma (Cardiologist)", "specialist", "specialist123", "Specialist", "District Hospital Ongole - Cardiology Unit"),
         ("Ramesh Patel", "admin", "admin123", "Administrator", "Chirala PHC Block"),
     ]
     for name, username, password, role, facility in demo_users:
