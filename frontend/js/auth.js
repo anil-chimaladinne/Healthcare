@@ -212,6 +212,10 @@ document.addEventListener("click", (e) => {
   const btn = e.target.closest("#btn-logout, .btn-logout, [data-action='logout']");
   if (btn) {
     e.preventDefault();
+    logout();
+  }
+});
+
 /**
  * Switch between Sign In and Create Account tabs
  * @param {'login'|'register'} tab 
