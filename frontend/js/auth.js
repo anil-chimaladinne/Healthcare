@@ -110,17 +110,27 @@ function setupGlobalHeader(user) {
   // 2. Render User Role Badge if present
   const userRoleEl = document.getElementById("user-role-badge");
   if (userRoleEl) {
-    userRoleEl.textContent = user.role;
-    userRoleEl.className = "badge";
-    if (user.role.includes("Health Worker") || user.role.includes("ASHA")) {
-      userRoleEl.classList.add("badge-healthworker");
-    } else if (user.role.includes("Specialist")) {
-      userRoleEl.classList.add("badge-specialist");
+    let icon = "👷";
+    let roleClass = "badge-healthworker";
+    let roleName = user.role || "Health Worker";
+
+    if (user.role.includes("Specialist")) {
+      icon = "🩺";
+      roleClass = "badge-specialist";
     } else if (user.role.includes("Doctor")) {
-      userRoleEl.classList.add("badge-doctor");
+      icon = "👨‍⚕️";
+      roleClass = "badge-doctor";
+    } else if (user.role.includes("Admin")) {
+      icon = "⚙️";
+      roleClass = "badge-admin";
     } else {
-      userRoleEl.classList.add("badge-admin");
+      icon = "👷";
+      roleClass = "badge-healthworker";
+      roleName = "Health Worker";
     }
+
+    userRoleEl.innerHTML = `<span>${icon}</span> <span>${roleName}</span>`;
+    userRoleEl.className = `badge ${roleClass}`;
   }
 
   // 3. Render User Name if present

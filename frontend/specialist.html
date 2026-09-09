@@ -30,10 +30,14 @@
       </a>
 
       <div class="header-controls">
-        <select id="lang-select" class="form-select" style="min-height: 36px; padding: 2px 8px; width: auto; font-size: 0.8125rem;">
-          <option value="en">English</option>
-          <option value="te">తెలుగు</option>
+        <select id="lang-select" class="form-select">
+          <option value="en">🌐 English</option>
+          <option value="te">🌐 తెలుగు</option>
         </select>
+
+        <button id="btn-install-pwa" class="btn btn-outline btn-sm btn-pwa-pill" onclick="triggerPWAInstall()" title="Install SevaHealth App for offline use">
+          <span>✓</span> <span data-i18n="app_installed">Installed</span>
+        </button>
 
         <button id="btn-toggle-offline-demo" class="btn btn-outline btn-sm" onclick="toggleSimulatedOffline()">
           📡 Simulate Offline
@@ -45,10 +49,10 @@
         </span>
 
         <span id="sync-status-indicator" class="badge badge-primary">☁️ All synced</span>
-        <button id="btn-sync-now" class="btn btn-primary btn-sm" onclick="syncPendingRecords()" data-i18n="sync_now">Sync Now</button>
+        <button id="btn-sync-now" class="btn btn-primary btn-sm" onclick="syncPendingRecords()" data-i18n="sync_now">🔄 Sync Now</button>
 
-        <span id="user-role-badge" class="badge badge-specialist">Specialist</span>
-        <button id="btn-logout" class="btn btn-danger-outline btn-sm" onclick="logout()" data-i18n="sign_out">Sign Out</button>
+        <span id="user-role-badge" class="badge badge-specialist">🩺 Specialist</span>
+        <button id="btn-logout" class="btn btn-danger-outline btn-sm" onclick="logout()" data-i18n="sign_out">↪ Sign Out</button>
       </div>
     </div>
   </header>
