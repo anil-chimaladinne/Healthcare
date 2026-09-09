@@ -937,7 +937,7 @@ async function precacheAllAppPages() {
       "/icons/icon-192.png",
       "/icons/icon-512.png"
     ];
-    const cache = await caches.open("sevahealth-v2.3.0");
+    const cache = await caches.open("sevahealth-v2.4.0");
     await cache.addAll(urls);
     showToast("✅ All application pages and clinical modules are 100% cached for offline use!");
   } catch (err) {

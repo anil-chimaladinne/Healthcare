@@ -71,6 +71,8 @@ if FRONTEND_DIR.exists():
         app.mount("/js", StaticFiles(directory=FRONTEND_DIR / "js"), name="js")
     if (FRONTEND_DIR / "icons").exists():
         app.mount("/icons", StaticFiles(directory=FRONTEND_DIR / "icons"), name="icons")
+    if (FRONTEND_DIR / "images").exists():
+        app.mount("/images", StaticFiles(directory=FRONTEND_DIR / "images"), name="images")
 
     @app.get("/favicon.ico", include_in_schema=False)
     def read_favicon():
