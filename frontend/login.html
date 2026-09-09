@@ -50,76 +50,234 @@
     </div>
   </header>
 
-  <!-- Login Card Container -->
+  <!-- Login & Registration Card Container -->
   <main class="login-card-container">
-    <div class="login-card">
+    <div class="login-card" id="auth-card">
       
-      <div style="text-align: center; margin-bottom: 1.75rem;">
-        <div class="brand-icon" style="margin: 0 auto 0.75rem; width: 48px; height: 48px; font-size: 1.5rem;">✚</div>
-        <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--slate-900);">SevaHealth Portal</h2>
-        <p style="font-size: 0.875rem; color: var(--slate-500); margin-top: 0.25rem;">Select your role to access your healthcare workspace</p>
+      <div style="text-align: center; margin-bottom: 1.25rem;">
+        <div class="brand-icon" style="margin: 0 auto 0.5rem; width: 44px; height: 44px; font-size: 1.4rem;">✚</div>
+        <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--slate-900);">SevaHealth Portal</h2>
+        <p id="auth-subtitle" style="font-size: 0.8125rem; color: var(--slate-500); margin-top: 0.2rem;">
+          Sign in or register your healthcare workspace
+        </p>
       </div>
 
-      <!-- Error Alert -->
-      <div id="error-alert" style="display: none; padding: 0.75rem 1rem; border-radius: var(--radius-md); font-size: 0.875rem; margin-bottom: 1.25rem; background: var(--risk-red-bg); border: 1px solid var(--risk-red-border); color: var(--risk-red);" role="alert"></div>
-
-      <!-- Login Form -->
-      <form id="login-form" novalidate>
-        <div class="form-group">
-          <label for="username" class="form-label">Username</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            class="form-input"
-            placeholder="e.g. healthworker, doctor, admin"
-            required
-            autocomplete="username"
-          >
-        </div>
-
-        <div class="form-group">
-          <label for="password" class="form-label">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            class="form-input"
-            placeholder="Enter demo password"
-            required
-            autocomplete="current-password"
-          >
-        </div>
-
-        <button type="submit" id="btn-submit-login" class="btn btn-primary btn-block">
-          Sign In to Workspace &rarr;
+      <!-- Auth Tabs: Sign In / Create Account -->
+      <div class="auth-tabs" role="tablist">
+        <button type="button" class="auth-tab-btn active" id="tab-btn-login" role="tab" aria-selected="true" onclick="switchAuthTab('login')">
+          <span>🔐</span> Sign In
         </button>
-      </form>
+        <button type="button" class="auth-tab-btn" id="tab-btn-register" role="tab" aria-selected="false" onclick="switchAuthTab('register')">
+          <span>📝</span> Create Account
+        </button>
+      </div>
 
-      <!-- Quick Demo Credentials for SIH Judges -->
-      <div style="margin-top: 1.75rem; padding-top: 1.25rem; border-top: 1px dashed var(--slate-200);">
-        <h4 style="font-size: 0.8125rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--slate-500); margin-bottom: 0.75rem; text-align: center;">
-          ⚡ SIH Quick Role Selector (Click to Autofill)
-        </h4>
+      <!-- Feedback Alerts -->
+      <div id="error-alert" style="display: none; padding: 0.75rem 1rem; border-radius: var(--radius-md); font-size: 0.8125rem; margin-bottom: 1.25rem; background: var(--risk-red-bg); border: 1px solid var(--risk-red-border); color: var(--risk-red);" role="alert"></div>
+      
+      <div id="success-alert" class="alert-success-custom" style="display: none;" role="status">
+        <span>✅</span>
+        <span id="success-alert-text">Account created successfully!</span>
+      </div>
 
-        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem;">
-          <button type="button" class="btn btn-outline btn-sm" style="font-size: 0.75rem; padding: 0.5rem 0.25rem; text-align: center;" onclick="setDemoCredentials('healthworker', 'health123')">
-            🏥 ASHA / HW
+      <!-- 1. LOGIN FORM -->
+      <div id="login-form-container">
+        <form id="login-form" novalidate>
+          <div class="form-group">
+            <label for="username" class="form-label">Username</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              class="form-input"
+              placeholder="e.g. healthworker, doctor, specialist, admin"
+              required
+              autocomplete="username"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="password" class="form-label">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              class="form-input"
+              placeholder="Enter password"
+              required
+              autocomplete="current-password"
+            >
+          </div>
+
+          <button type="submit" id="btn-submit-login" class="btn btn-primary btn-block" style="padding: 0.75rem; font-weight: 700;">
+            Sign In to Workspace &rarr;
           </button>
-          <button type="button" class="btn btn-outline btn-sm" style="font-size: 0.75rem; padding: 0.5rem 0.25rem; text-align: center;" onclick="setDemoCredentials('doctor', 'doctor123')">
-            👨‍⚕️ Doctor (MO)
-          </button>
-          <button type="button" class="btn btn-outline btn-sm" style="font-size: 0.75rem; padding: 0.5rem 0.25rem; text-align: center; border-color: #8b5cf6; color: #6d28d9; background: #f5f3ff;" onclick="setDemoCredentials('specialist', 'specialist123')">
-            🩺 Specialist (Hospital)
-          </button>
-          <button type="button" class="btn btn-outline btn-sm" style="font-size: 0.75rem; padding: 0.5rem 0.25rem; text-align: center;" onclick="setDemoCredentials('admin', 'admin123')">
-            ⚙️ Admin
-          </button>
+        </form>
+
+        <div class="auth-switch-prompt">
+          Don't have an account? <a onclick="switchAuthTab('register')">Create an Account for ASHA, Doctor, etc.</a>
         </div>
 
-        <p style="font-size: 0.75rem; color: var(--slate-400); text-align: center; margin-top: 0.75rem;">
-          Demo Passwords: <code>health123</code> &bull; <code>doctor123</code> &bull; <code>specialist123</code> &bull; <code>admin123</code>
-        </p>
+        <!-- Quick Demo Credentials for SIH Judges -->
+        <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px dashed var(--slate-200);">
+          <h4 style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--slate-500); margin-bottom: 0.625rem; text-align: center;">
+            ⚡ Quick Demo Accounts (Click to Autofill)
+          </h4>
+
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem;">
+            <button type="button" class="btn btn-outline btn-sm" style="font-size: 0.75rem; padding: 0.5rem 0.25rem; text-align: center;" onclick="setDemoCredentials('healthworker', 'health123')">
+              🏥 ASHA / HW
+            </button>
+            <button type="button" class="btn btn-outline btn-sm" style="font-size: 0.75rem; padding: 0.5rem 0.25rem; text-align: center;" onclick="setDemoCredentials('doctor', 'doctor123')">
+              👨‍⚕️ Doctor (MO)
+            </button>
+            <button type="button" class="btn btn-outline btn-sm" style="font-size: 0.75rem; padding: 0.5rem 0.25rem; text-align: center; border-color: #8b5cf6; color: #6d28d9; background: #f5f3ff;" onclick="setDemoCredentials('specialist', 'specialist123')">
+              🩺 Specialist (Hospital)
+            </button>
+            <button type="button" class="btn btn-outline btn-sm" style="font-size: 0.75rem; padding: 0.5rem 0.25rem; text-align: center;" onclick="setDemoCredentials('admin', 'admin123')">
+              ⚙️ Admin
+            </button>
+          </div>
+
+          <p style="font-size: 0.72rem; color: var(--slate-400); text-align: center; margin-top: 0.625rem; margin-bottom: 0;">
+            Demo Passwords: <code>health123</code> &bull; <code>doctor123</code> &bull; <code>specialist123</code> &bull; <code>admin123</code>
+          </p>
+        </div>
+      </div>
+
+      <!-- 2. CREATE ACCOUNT (REGISTRATION) FORM -->
+      <div id="register-form-container" style="display: none;">
+        <form id="register-form" novalidate>
+          
+          <!-- Role Selection Grid -->
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label class="form-label" style="margin-bottom: 0.35rem; display: flex; justify-content: space-between; align-items: center;">
+              <span>Select Healthcare Role <span style="color: var(--risk-red);">*</span></span>
+              <span style="font-size: 0.7rem; color: var(--slate-400); font-weight: normal;">Tailored workspace</span>
+            </label>
+            
+            <div class="role-select-grid">
+              <label class="role-radio-card active" id="role-card-asha">
+                <input type="radio" name="reg-role" value="Health Worker (ASHA / ANM)" checked onchange="handleRoleSelectionChange(this.value)">
+                <div class="role-title">🏥 ASHA / ANM</div>
+                <div class="role-desc">Frontline survey, vitals & field triage</div>
+              </label>
+
+              <label class="role-radio-card" id="role-card-doctor">
+                <input type="radio" name="reg-role" value="Doctor (Medical Officer)" onchange="handleRoleSelectionChange(this.value)">
+                <div class="role-title">👨‍⚕️ Doctor (MO)</div>
+                <div class="role-desc">PHC consultations, Rx & lab orders</div>
+              </label>
+
+              <label class="role-radio-card specialist-card" id="role-card-specialist">
+                <input type="radio" name="reg-role" value="Specialist (Hospital)" onchange="handleRoleSelectionChange(this.value)">
+                <div class="role-title">🩺 Specialist</div>
+                <div class="role-desc">Hospital tele-care & high-risk referrals</div>
+              </label>
+
+              <label class="role-radio-card" id="role-card-admin">
+                <input type="radio" name="reg-role" value="Administrator" onchange="handleRoleSelectionChange(this.value)">
+                <div class="role-title">⚙️ Admin</div>
+                <div class="role-desc">Block health overview & logistics</div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Full Name & Username in 2 columns -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+            <div class="form-group">
+              <label for="reg-name" class="form-label">Full Name <span style="color: var(--risk-red);">*</span></label>
+              <input
+                type="text"
+                id="reg-name"
+                name="reg_name"
+                class="form-input"
+                placeholder="e.g. Sunitha Rao"
+                required
+                autocomplete="name"
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="reg-username" class="form-label">Username <span style="color: var(--risk-red);">*</span></label>
+              <input
+                type="text"
+                id="reg-username"
+                name="reg_username"
+                class="form-input"
+                placeholder="e.g. asha_sunitha"
+                required
+                autocomplete="username"
+              >
+            </div>
+          </div>
+
+          <!-- Password & Confirm Password in 2 columns -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+            <div class="form-group">
+              <label for="reg-password" class="form-label">Password <span style="color: var(--risk-red);">*</span></label>
+              <input
+                type="password"
+                id="reg-password"
+                name="reg_password"
+                class="form-input"
+                placeholder="At least 4 chars"
+                required
+                autocomplete="new-password"
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="reg-confirm-password" class="form-label">Confirm Password <span style="color: var(--risk-red);">*</span></label>
+              <input
+                type="password"
+                id="reg-confirm-password"
+                name="reg_confirm_password"
+                class="form-input"
+                placeholder="Re-enter password"
+                required
+                autocomplete="new-password"
+              >
+            </div>
+          </div>
+
+          <!-- Facility / Health Centre & Phone Number -->
+          <div style="display: grid; grid-template-columns: 1.3fr 1fr; gap: 0.75rem;">
+            <div class="form-group">
+              <label for="reg-facility" class="form-label">
+                <span id="facility-label-text">Health Centre / Sub-Centre</span>
+              </label>
+              <input
+                type="text"
+                id="reg-facility"
+                name="reg_facility"
+                class="form-input"
+                placeholder="e.g. Ramapuram Sub-Centre"
+                autocomplete="organization"
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="reg-phone" class="form-label">Phone (Optional)</label>
+              <input
+                type="tel"
+                id="reg-phone"
+                name="reg_phone"
+                class="form-input"
+                placeholder="10-digit Mobile"
+                autocomplete="tel"
+              >
+            </div>
+          </div>
+
+          <button type="submit" id="btn-submit-register" class="btn btn-primary btn-block" style="padding: 0.75rem; font-weight: 700; margin-top: 0.5rem;">
+            Create Account & Enter Workspace &rarr;
+          </button>
+        </form>
+
+        <div class="auth-switch-prompt">
+          Already have an account? <a onclick="switchAuthTab('login')">Sign In here</a>
+        </div>
       </div>
 
     </div>

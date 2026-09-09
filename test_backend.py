@@ -61,6 +61,48 @@ def run_tests():
     assert status == 401
     print("  -> PASSED: Rejected invalid credentials with 401.")
 
+    # 2b. User Registration (ASHA Worker & Doctor)
+    import time
+    ts = int(time.time() * 1000)
+    test_asha_user = f"kavitha_{ts}"
+    test_doc_user = f"dr_rajesh_{ts}"
+
+    print("\n[2b/9] Testing POST /api/auth/register (Create Account for ASHA & Doctor)...")
+    reg_asha = {
+        "name": "Kavitha Reddy (ASHA)",
+        "username": test_asha_user,
+        "password": "asha_password_123",
+        "role": "Health Worker (ASHA / ANM)",
+        "facility": "Kothapeta Sub-Centre"
+    }
+    status, body = make_request("/api/auth/register", method="POST", data=reg_asha)
+    assert status == 200 and body["success"] is True and body["username"] == test_asha_user
+    print(f"  -> PASSED: Registered ASHA account for {body['name']} ({body['facility']})")
+
+    # Verify login with newly registered ASHA user
+    status, body = make_request("/api/auth/login", method="POST", data={"username": test_asha_user, "password": "asha_password_123"})
+    assert status == 200 and body["success"] is True and "Health Worker" in body["role"]
+    print(f"  -> PASSED: Successfully authenticated new registered ASHA worker: {body['name']}")
+
+    # Register Doctor
+    reg_doc = {
+        "name": "Dr. Rajesh Varma (MO)",
+        "username": test_doc_user,
+        "password": "doc_password_123",
+        "role": "Doctor (Medical Officer)",
+        "facility": "Chirala Community Health Centre"
+    }
+    status, body = make_request("/api/auth/register", method="POST", data=reg_doc)
+    assert status == 200 and body["success"] is True and body["username"] == test_doc_user
+    print(f"  -> PASSED: Registered Doctor account for {body['name']} ({body['facility']})")
+
+    # Verify duplicate username prevention
+    status, body = make_request("/api/auth/register", method="POST", data=reg_asha)
+    assert status == 400
+    print(f"  -> PASSED: Duplicate username registration blocked: {body.get('detail', '')}")
+
+
+
     # 3. Patient Registration & Doorstep Intake
     print("\n[3/9] Testing POST /api/patients (Doorstep Intake + Instant Triage)...")
     patient_payload = {

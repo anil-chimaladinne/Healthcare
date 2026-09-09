@@ -3,7 +3,7 @@
  * Caches core application shell assets for offline rural use.
  */
 
-const CACHE_NAME = "sevahealth-v2.4.0";
+const CACHE_NAME = "sevahealth-v2.5.0";
 const ASSETS_TO_CACHE = [
   "/",
   "/index.html",

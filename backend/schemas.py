@@ -29,6 +29,25 @@ class LoginResponse(BaseModel):
     message: str
 
 
+class RegisterRequest(BaseModel):
+    name: str = Field(..., description="Full Name of the Healthcare Personnel")
+    username: str = Field(..., description="Unique Username for Login")
+    password: str = Field(..., description="Account Password")
+    role: str = Field(..., description="Role: Health Worker, Doctor, Specialist, Administrator")
+    facility: Optional[str] = Field("Chirala Primary Health Centre", description="Assigned Health Centre or Hospital")
+    phone: Optional[str] = Field(None, description="Contact Phone Number")
+
+
+class RegisterResponse(BaseModel):
+    success: bool
+    user_id: int
+    name: str
+    username: str
+    role: str
+    facility: str
+    message: str
+
+
 # --- Vitals & Symptoms ---
 class VitalsInput(BaseModel):
     temperature: Optional[float] = Field(None, description="Body Temperature in °F")

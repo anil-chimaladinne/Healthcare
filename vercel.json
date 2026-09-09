@@ -40,11 +40,11 @@
       "dest": "frontend/service-worker.js"
     },
     {
-      "src": "/(dashboard|patient|doctor|referrals|followups|login)",
+      "src": "/(dashboard|patient|doctor|specialist|referrals|followups|login)",
       "dest": "frontend/$1.html"
     },
     {
-      "src": "/(dashboard|patient|doctor|referrals|followups|login)\\.html",
+      "src": "/(dashboard|patient|doctor|specialist|referrals|followups|login)\\.html",
       "dest": "frontend/$1.html"
     },
     {

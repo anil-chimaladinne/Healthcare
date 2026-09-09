@@ -103,7 +103,99 @@ async function loginUser(username, password) {
   }
 }
 
+/**
+ * Register a new healthcare worker, doctor, specialist, or admin
+ */
+async function registerUser(userData) {
+  const cleanUser = userData.username.trim().toLowerCase();
+
+  // If offline or simulated offline, register locally in offline storage
+  if (typeof isAppOnline === "function" && !isAppOnline()) {
+    return registerOffline(userData);
+  }
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/auth/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: userData.name.trim(),
+        username: cleanUser,
+        password: userData.password,
+        role: userData.role.trim(),
+        facility: (userData.facility || "Chirala Primary Health Centre").trim(),
+        phone: userData.phone ? userData.phone.trim() : null
+      })
+    });
+
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.detail || "Failed to create account.");
+    }
+
+    // Cache user locally for offline use
+    saveUserLocally(cleanUser, userData.password, data);
+
+    return data;
+  } catch (e) {
+    if (e.message.includes("Failed to fetch") || e.message.includes("NetworkError") || e.message.includes("fetch")) {
+      return registerOffline(userData);
+    }
+    throw e;
+  }
+}
+
+function saveUserLocally(cleanUser, password, data) {
+  try {
+    const stored = JSON.parse(localStorage.getItem("sevahealth_local_users") || "{}");
+    stored[cleanUser] = {
+      password: password,
+      data: {
+        success: true,
+        user_id: data.user_id || Date.now(),
+        name: data.name,
+        username: cleanUser,
+        role: data.role,
+        facility: data.facility
+      }
+    };
+    localStorage.setItem("sevahealth_local_users", JSON.stringify(stored));
+  } catch (err) {
+    console.warn("Could not cache user locally:", err);
+  }
+}
+
+function registerOffline(userData) {
+  const cleanUser = userData.username.trim().toLowerCase();
+  const localUsers = JSON.parse(localStorage.getItem("sevahealth_local_users") || "{}");
+
+  if (OFFLINE_DEMO_ACCOUNTS[cleanUser] || localUsers[cleanUser]) {
+    throw new Error(`Username '${userData.username}' is already registered in offline mode.`);
+  }
+
+  const newUserData = {
+    success: true,
+    user_id: Date.now(),
+    name: userData.name.trim(),
+    username: cleanUser,
+    role: userData.role.trim(),
+    facility: (userData.facility || "Chirala Primary Health Centre").trim()
+  };
+
+  saveUserLocally(cleanUser, userData.password, newUserData);
+
+  if (typeof showToast === "function") {
+    showToast("📴 Account created and cached locally in offline mode.");
+  }
+
+  return {
+    ...newUserData,
+    message: "Account created successfully in offline mode!"
+  };
+}
+
 function authenticateOffline(cleanUser, password) {
+  // 1. Check pre-seeded demo accounts
   const account = OFFLINE_DEMO_ACCOUNTS[cleanUser];
   if (account && account.password === password) {
     if (typeof showToast === "function") {
@@ -111,8 +203,24 @@ function authenticateOffline(cleanUser, password) {
     }
     return account.data;
   }
-  throw new Error("Invalid username or password. Demo passwords: health123, doctor123, admin123");
+
+  // 2. Check dynamically created local accounts
+  try {
+    const localUsers = JSON.parse(localStorage.getItem("sevahealth_local_users") || "{}");
+    const localAccount = localUsers[cleanUser];
+    if (localAccount && localAccount.password === password) {
+      if (typeof showToast === "function") {
+        showToast("📴 Offline Login: Authenticated locally from registered accounts.");
+      }
+      return localAccount.data;
+    }
+  } catch (err) {
+    console.error("Error checking local offline users:", err);
+  }
+
+  throw new Error("Invalid username or password. Demo passwords: health123, doctor123, specialist123, admin123");
 }
+
 
 /**
  * Get dashboard metrics with dynamic offline calculation
