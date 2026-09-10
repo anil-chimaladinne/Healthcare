@@ -14,7 +14,7 @@ if ("serviceWorker" in navigator && window.location.protocol.startsWith("http"))
   if ("caches" in window) {
     caches.keys().then((keys) => {
       keys.forEach((key) => {
-        if (key !== "sevahealth-v3.9.5-auth-fix") {
+        if (key !== "sevahealth-v4.0.0-role-nav") {
           console.log("[ServiceWorker] Purging old cache:", key);
           caches.delete(key);
         }

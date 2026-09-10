@@ -177,12 +177,14 @@ function setupMobileDrawerAndNav() {
   if (drawerCloseBtn) drawerCloseBtn.onclick = closeDrawer;
   if (drawerBackdrop) drawerBackdrop.onclick = closeDrawer;
 
-  // Highlight active tab in Mobile Bottom Navigation
+  // Highlight active tab in Mobile Subnav Strip, Drawer & Sidebar
   const curPath = (window.location.pathname || "").toLowerCase();
-  const bottomNavItems = document.querySelectorAll(".mobile-bottom-nav .mobile-nav-item");
-  bottomNavItems.forEach((item) => {
+  const allNavItems = document.querySelectorAll(".mobile-subnav-item, .drawer-nav-item, .sidebar-nav .nav-link");
+  allNavItems.forEach((item) => {
     const href = (item.getAttribute("href") || "").toLowerCase();
-    if (curPath.endsWith(href) || (href === "index.html" && (curPath.endsWith("/") || curPath === ""))) {
+    if (curPath.endsWith(href) || (href === "dashboard.html" && (curPath.endsWith("dashboard.html") || curPath === "" || curPath.endsWith("/")))) {
+      item.classList.add("active");
+    } else if (href && curPath.includes(href.replace(".html", ""))) {
       item.classList.add("active");
     } else {
       item.classList.remove("active");
@@ -223,38 +225,38 @@ function applyRolePermissions() {
     return;
   }
 
-  // 2. Filter Navigation Links across all pages
-  const navLinks = document.querySelectorAll(".sidebar-nav .nav-link, a[href*='.html']");
+  // 2. Filter Navigation Links across all navigation elements (sidebar, mobile subnav strip, and mobile drawer)
+  const navLinks = document.querySelectorAll(".sidebar-nav .nav-link, .mobile-subnav-item, .drawer-nav-item");
   navLinks.forEach((link) => {
     const href = (link.getAttribute("href") || "").toLowerCase();
 
     if (isAsha) {
-      // ASHA sees: Dashboard, Patients & Doorstep, Referrals (Follow-ups, Doctor Queue, Specialist Queue removed)
+      // ASHA sees: Dashboard, Doorstep/Patients, Referrals
       if (href.includes("doctor.html") || href.includes("specialist.html") || href.includes("followups.html")) {
         link.style.display = "none";
       } else if (href.includes("dashboard") || href.includes("patient") || href.includes("referrals")) {
-        link.style.display = "flex";
+        link.style.display = "";
       }
     } else if (isDoctor) {
       // Doctor sees: Dashboard, Doctor Queue, Referrals
       if (href.includes("patient.html") || href.includes("specialist.html") || href.includes("followups.html")) {
         link.style.display = "none";
       } else if (href.includes("dashboard") || href.includes("doctor") || href.includes("referrals")) {
-        link.style.display = "flex";
+        link.style.display = "";
       }
     } else if (isSpecialist) {
       // Specialist sees: Dashboard, Specialist Workspace, Referrals
       if (href.includes("patient.html") || href.includes("doctor.html") || href.includes("followups.html")) {
         link.style.display = "none";
       } else if (href.includes("dashboard") || href.includes("specialist") || href.includes("referrals")) {
-        link.style.display = "flex";
+        link.style.display = "";
       }
     } else if (isAdmin) {
       // Admin sees: Dashboard, Specialist Queue & Referrals
       if (href.includes("patient.html") || href.includes("doctor.html") || href.includes("followups.html")) {
         link.style.display = "none";
       } else if (href.includes("dashboard") || href.includes("referrals") || href.includes("specialist")) {
-        link.style.display = "flex";
+        link.style.display = "";
       }
     }
   });

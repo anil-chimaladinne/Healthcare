@@ -58,6 +58,25 @@
     </div>
   </header>
 
+  <!-- Mobile Horizontal Subnav Strip (Visible on mobile screens) -->
+  <nav class="mobile-subnav-strip">
+    <a href="dashboard.html" class="mobile-subnav-item">
+      <span>📊</span> <span data-i18n="nav_dashboard">Dashboard</span>
+    </a>
+    <a href="patient.html" class="mobile-subnav-item">
+      <span>🏡</span> <span data-i18n="nav_patients">Doorstep Visit</span>
+    </a>
+    <a href="doctor.html" class="mobile-subnav-item">
+      <span>🩺</span> <span data-i18n="nav_doctor_queue">Doctor Queue</span>
+    </a>
+    <a href="specialist.html" class="mobile-subnav-item">
+      <span>🔬</span> <span>Specialist</span>
+    </a>
+    <a href="referrals.html" class="mobile-subnav-item">
+      <span>🚑</span> <span data-i18n="nav_referrals">Referrals</span>
+    </a>
+  </nav>
+
   <!-- App Layout -->
   <div class="app-layout">
 
@@ -183,6 +202,26 @@
         </button>
       </div>
 
+      <!-- Navigation Links in Drawer -->
+      <div style="display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.5rem; margin-bottom: 0.5rem;">
+        <span style="font-size: 0.75rem; font-weight: 700; color: var(--slate-500); text-transform: uppercase; letter-spacing: 0.05em;">Workspaces</span>
+        <a href="dashboard.html" class="drawer-nav-item">
+          <span>📊</span> <span data-i18n="nav_dashboard">Dashboard</span>
+        </a>
+        <a href="patient.html" class="drawer-nav-item">
+          <span>🏡</span> <span data-i18n="nav_patients">Doorstep Patient Visit</span>
+        </a>
+        <a href="doctor.html" class="drawer-nav-item">
+          <span>🩺</span> <span data-i18n="nav_doctor_queue">Doctor Queue</span>
+        </a>
+        <a href="specialist.html" class="drawer-nav-item">
+          <span>🔬</span> <span>Specialist Workspace</span>
+        </a>
+        <a href="referrals.html" class="drawer-nav-item">
+          <span>🚑</span> <span data-i18n="nav_referrals">Referrals Directory</span>
+        </a>
+      </div>
+
       <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.65rem 0.85rem; background: var(--slate-50); border: 1px solid var(--slate-200); border-radius: var(--radius-md);">
         <span style="font-size: 0.85rem; font-weight: 600; color: var(--slate-600);">Offline Sync Queue:</span>
         <span id="mobile-sync-status-indicator" class="badge badge-primary">☁️ All synced</span>
@@ -201,10 +240,10 @@
 
 
   <!-- Scripts -->
-  <script src="js/api.js?v=3.9.5"></script>
-  <script src="js/i18n.js?v=3.9.5"></script>
-  <script src="js/offline.js?v=3.9.5"></script>
-  <script src="js/auth.js?v=3.9.5"></script>
-  <script src="js/followups.js?v=3.9.5"></script>
+  <script src="js/api.js?v=4.0.0"></script>
+  <script src="js/i18n.js?v=4.0.0"></script>
+  <script src="js/offline.js?v=4.0.0"></script>
+  <script src="js/auth.js?v=4.0.0"></script>
+  <script src="js/followups.js?v=4.0.0"></script>
 </body>
 </html>

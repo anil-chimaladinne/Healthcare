@@ -1299,7 +1299,7 @@ body.page-login footer {
 }
 
 /* --------------------------------------------------------------------------
-   Mobile App Layout & Media Queries
+   Mobile App Layout & Navigation Strip
    -------------------------------------------------------------------------- */
 .mobile-bottom-nav {
   display: none !important;
@@ -1309,7 +1309,75 @@ body.has-bottom-nav {
   padding-bottom: 0 !important;
 }
 
+.mobile-subnav-strip {
+  display: none;
+}
+
+.drawer-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: var(--radius-md);
+  background: var(--slate-50);
+  border: 1px solid var(--slate-200);
+  color: var(--slate-800);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.15s ease;
+}
+
+.drawer-nav-item:hover, .drawer-nav-item.active {
+  background: #fff7ed;
+  border-color: #fdba74;
+  color: #ea580c;
+}
+
 @media (max-width: 768px) {
+  /* Horizontal scrollable Workspace Subnav on Mobile */
+  .mobile-subnav-strip {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.75rem;
+    background: #ffffff;
+    border-bottom: 1px solid var(--slate-200);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+    scrollbar-width: none;
+    position: sticky;
+    top: 52px;
+    z-index: 95;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+  }
+
+  .mobile-subnav-strip::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mobile-subnav-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: 9999px;
+    font-size: 0.825rem;
+    font-weight: 600;
+    color: var(--slate-700);
+    background: var(--slate-100);
+    text-decoration: none;
+    flex-shrink: 0;
+    transition: all 0.15s ease;
+  }
+
+  .mobile-subnav-item.active {
+    background: linear-gradient(135deg, #f97316, #ea580c) !important;
+    color: #ffffff !important;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(234, 88, 12, 0.35);
+  }
   /* Viewport and App layout reset */
   body {
     padding-bottom: 0 !important;
