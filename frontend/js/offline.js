@@ -8,18 +8,35 @@ const DB_NAME = "SevaHealthOfflineDB";
 const DB_VERSION = 2;
 let dbInstance = null;
 
-// Register Service Worker for true browser offline caching
+// Register Service Worker for true browser offline caching with auto-update
 if ("serviceWorker" in navigator && window.location.protocol.startsWith("http")) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
       .register("/service-worker.js")
       .then((reg) => {
         reg.update();
-        console.log("[ServiceWorker] Registered and updated:", reg.scope);
+        if (reg.waiting) {
+          reg.waiting.postMessage({ type: "SKIP_WAITING" });
+        }
+        reg.onupdatefound = () => {
+          const installing = reg.installing;
+          if (installing) {
+            installing.onstatechange = () => {
+              if (installing.state === "installed" && navigator.serviceWorker.controller) {
+                console.log("[ServiceWorker] New version installed, reloading...");
+                window.location.reload();
+              }
+            };
+          }
+        };
       })
       .catch((err) => {
         console.warn("[ServiceWorker] Registration notice:", err);
       });
+  });
+
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    console.log("[ServiceWorker] Controller changed to fresh version.");
   });
 }
 

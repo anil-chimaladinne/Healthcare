@@ -3,7 +3,7 @@
  * Caches core application shell assets for offline rural use.
  */
 
-const CACHE_NAME = "sevahealth-v2.8.0";
+const CACHE_NAME = "sevahealth-v3.5.0-mobile-nav";
 const ASSETS_TO_CACHE = [
   "/",
   "/index.html",
@@ -14,20 +14,20 @@ const ASSETS_TO_CACHE = [
   "/specialist.html",
   "/referrals.html",
   "/followups.html",
-  "/css/style.css",
+  "/css/style.css?v=3.5.0",
   "/images/login-bg.jpg",
   "/images/header-banner.jpg",
-  "/js/api.js",
-  "/js/auth.js",
-  "/js/i18n.js",
-  "/js/offline.js",
-  "/js/triage.js",
-  "/js/dashboard.js",
-  "/js/patient.js",
-  "/js/doctor.js",
-  "/js/specialist.js",
-  "/js/referrals.js",
-  "/js/followups.js",
+  "/js/api.js?v=3.5.0",
+  "/js/auth.js?v=3.5.0",
+  "/js/i18n.js?v=3.5.0",
+  "/js/offline.js?v=3.5.0",
+  "/js/triage.js?v=3.5.0",
+  "/js/dashboard.js?v=3.5.0",
+  "/js/patient.js?v=3.5.0",
+  "/js/doctor.js?v=3.5.0",
+  "/js/specialist.js?v=3.5.0",
+  "/js/referrals.js?v=3.5.0",
+  "/js/followups.js?v=3.5.0",
   "/manifest.json",
   "/icons/icon-192.png",
   "/icons/icon-512.png",
@@ -35,32 +35,38 @@ const ASSETS_TO_CACHE = [
   "/icons/favicon.ico"
 ];
 
-// Install Event: Cache app shell
+// Skip waiting message listener
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
+});
+
+// Install Event: Cache app shell immediately and force activation
 self.addEventListener("install", (event) => {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log("[Service Worker] Caching Application Shell Assets");
+      console.log("[Service Worker] Caching New Application Shell Assets v3.5.0");
       return cache.addAll(ASSETS_TO_CACHE);
     }).catch((err) => console.warn("[Service Worker] Cache install notice:", err))
   );
-  self.skipWaiting();
 });
 
-// Activate Event: Cleanup old caches
+// Activate Event: Cleanup ALL old caches immediately
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((keyList) => {
       return Promise.all(
         keyList.map((key) => {
           if (key !== CACHE_NAME) {
-            console.log("[Service Worker] Removing old cache", key);
+            console.log("[Service Worker] Purging old cache:", key);
             return caches.delete(key);
           }
         })
       );
-    })
+    }).then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
 // Fetch Event: Network-first with offline cache fallback
