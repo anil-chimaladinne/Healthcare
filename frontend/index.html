@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>SevaHealth - Offline-First Smart Healthcare for Rural India</title>
-  <meta name="description" content="Connected care for rural patients, ASHA workers, PHCs and doctors—even with unreliable internet. SIH 2026 Prototype.">
+  <meta name="description" content="Connected care for rural patients, ASHA workers, PHCs and doctors—even with unreliable internet.">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
@@ -14,9 +14,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=3.8.0">
+  <link rel="stylesheet" href="css/style.css?v=3.9.0">
 </head>
-<body class="page-landing has-bottom-nav">
+<body class="page-landing">
 
   <!-- Top Navigation Header (Mobile App Bar) -->
   <header class="site-header">
@@ -61,11 +61,6 @@
     <section style="padding: 1.75rem 1rem 2rem; background: radial-gradient(circle at 50% 5%, rgba(204, 251, 241, 0.75) 0%, rgba(248, 250, 252, 0.5) 80%);">
       <div style="max-width: 1100px; margin: 0 auto; text-align: center;">
 
-        <div style="display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(13, 148, 136, 0.1); border: 1px solid rgba(13, 148, 136, 0.25); padding: 0.35rem 0.85rem; border-radius: 9999px; margin-bottom: 1rem;">
-          <span style="font-size: 0.9rem;">🇮🇳</span>
-          <span style="font-size: 0.8125rem; font-weight: 700; color: #0f766e;">SIH 2026 Student Hackathon Prototype</span>
-        </div>
-
         <h1 style="font-size: clamp(1.75rem, 5vw, 3.2rem); font-weight: 800; color: var(--slate-900); line-height: 1.2; margin-bottom: 0.85rem; letter-spacing: -0.025em;">
           Offline-First Smart Healthcare for <span style="color: var(--primary); background: linear-gradient(135deg, var(--primary), #0284c7); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Rural India</span>
         </h1>
@@ -75,13 +70,18 @@
         </p>
 
         <!-- Quick Action Primary Buttons -->
-        <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2rem;">
-          <a href="login.html" class="btn btn-primary" style="padding: 0.75rem 1.75rem; font-weight: 700;">
-            🚀 Open All Workspaces &rarr;
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 0.85rem; margin-bottom: 2rem;">
+          <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
+            <a href="login.html" class="btn btn-primary" style="padding: 0.75rem 1.75rem; font-weight: 700;">
+              🚀 Open All Workspaces &rarr;
+            </a>
+            <button class="btn btn-install-app" onclick="triggerPWAInstall()" style="padding: 0.75rem 1.25rem;">
+              📲 Install PWA App
+            </button>
+          </div>
+          <a href="login.html" class="btn" style="padding: 0.75rem 1.85rem; font-weight: 700; background: linear-gradient(135deg, #f97316, #ea580c); color: #ffffff; border-radius: 9999px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 14px rgba(234, 88, 12, 0.35); font-size: 1rem; border: none;">
+            🔑 Sign In / Create Account &rarr;
           </a>
-          <button class="btn btn-install-app" onclick="triggerPWAInstall()" style="padding: 0.75rem 1.25rem;">
-            📲 Install PWA App
-          </button>
         </div>
 
       </div>
@@ -309,38 +309,16 @@
     </div>
   </div>
 
-  <!-- Native Mobile Bottom Navigation Bar (5 Main Tabs) -->
-  <nav class="mobile-bottom-nav">
-    <a href="index.html" class="mobile-nav-item active">
-      <span class="mobile-nav-icon">🏠</span>
-      <span class="mobile-nav-label">Home</span>
-    </a>
-    <a href="dashboard.html" class="mobile-nav-item">
-      <span class="mobile-nav-icon">📊</span>
-      <span class="mobile-nav-label" data-i18n="nav_dashboard">Dashboard</span>
-    </a>
-    <a href="patient.html" class="mobile-nav-item">
-      <span class="mobile-nav-icon">🏡</span>
-      <span class="mobile-nav-label" data-i18n="nav_patients">Patients</span>
-    </a>
-    <a href="doctor.html" class="mobile-nav-item">
-      <span class="mobile-nav-icon">🩺</span>
-      <span class="mobile-nav-label" data-i18n="nav_doctor_queue">Doctor</span>
-    </a>
-    <a href="login.html" class="mobile-nav-item">
-      <span class="mobile-nav-icon">🔑</span>
-      <span class="mobile-nav-label" data-i18n="sign_in">Sign In</span>
-    </a>
-  </nav>
+
 
   <!-- Footer -->
   <footer style="background: var(--white); border-top: 1px solid var(--slate-200); padding: 1.5rem; text-align: center; font-size: 0.85rem; color: var(--slate-500); margin-top: auto;">
     <p>&copy; 2026 <strong>SevaHealth</strong> &bull; Offline-First Smart Healthcare for Rural India</p>
   </footer>
 
-  <script src="js/api.js?v=3.8.0"></script>
-  <script src="js/i18n.js?v=3.8.0"></script>
-  <script src="js/offline.js?v=3.8.0"></script>
-  <script src="js/auth.js?v=3.8.0"></script>
+  <script src="js/api.js?v=3.9.0"></script>
+  <script src="js/i18n.js?v=3.9.0"></script>
+  <script src="js/offline.js?v=3.9.0"></script>
+  <script src="js/auth.js?v=3.9.0"></script>
 </body>
 </html>

@@ -1299,19 +1299,20 @@ body.page-login footer {
 }
 
 /* --------------------------------------------------------------------------
-   Native App Bottom Navigation Bar (Amazon / Play Store Style)
+   Mobile App Layout & Media Queries
    -------------------------------------------------------------------------- */
 .mobile-bottom-nav {
-  display: none;
+  display: none !important;
 }
 
-/* --------------------------------------------------------------------------
-   Comprehensive Media Queries for Android, iOS & Mobile Screens
-   -------------------------------------------------------------------------- */
+body.has-bottom-nav {
+  padding-bottom: 0 !important;
+}
+
 @media (max-width: 768px) {
   /* Viewport and App layout reset */
   body {
-    padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px)) !important;
+    padding-bottom: 0 !important;
   }
 
   .app-layout {
@@ -1380,27 +1381,13 @@ body.page-login footer {
     max-width: 82px !important;
   }
 
-  /* Native Mobile Bottom Navigation Bar */
+  /* Native Mobile Bottom Navigation Bar (Hidden per user request) */
   body.has-bottom-nav {
-    padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px) + 16px) !important;
+    padding-bottom: 0 !important;
   }
 
   .mobile-bottom-nav {
-    display: flex;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px));
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-    background: rgba(255, 255, 255, 0.97);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-top: 1px solid rgba(226, 232, 240, 0.95);
-    box-shadow: 0 -4px 20px rgba(15, 23, 42, 0.08);
-    z-index: 990;
-    justify-content: space-around;
-    align-items: center;
+    display: none !important;
   }
 
   .mobile-nav-item {
