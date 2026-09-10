@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=3.9.0">
+  <link rel="stylesheet" href="css/style.css?v=3.9.5">
   <style>
     html, body.page-login {
       background-color: #051329 !important;
@@ -60,6 +60,21 @@
         <p id="auth-subtitle" style="font-size: 0.8125rem; color: var(--slate-500); margin-top: 0.2rem;">
           Sign in or register your healthcare workspace
         </p>
+      </div>
+
+      <!-- Active Session Notice (If already logged in) -->
+      <div id="active-session-notice" style="display: none; background: #fff7ed; border: 1px solid #fed7aa; padding: 0.75rem 1rem; border-radius: var(--radius-md); margin-bottom: 1.25rem; text-align: center;">
+        <p style="font-size: 0.8125rem; color: #9a3412; margin: 0 0 0.5rem; font-weight: 600;">
+          👤 Currently signed in as: <span id="active-session-user-text" style="color: #ea580c; font-weight: 700;"></span>
+        </p>
+        <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
+          <a id="btn-continue-workspace" href="dashboard.html" class="btn btn-primary btn-sm" style="font-size: 0.75rem; padding: 0.35rem 0.75rem;">
+            Continue to Workspace &rarr;
+          </a>
+          <button type="button" class="btn btn-outline btn-sm" style="font-size: 0.75rem; padding: 0.35rem 0.75rem; color: var(--risk-red); border-color: var(--risk-red-border);" onclick="logout()">
+            Sign Out / Switch User
+          </button>
+        </div>
       </div>
 
       <!-- Auth Tabs: Sign In / Create Account -->
@@ -287,9 +302,9 @@
     <p>&copy; 2026 <strong>SevaHealth</strong> &bull; Offline-First Smart Healthcare for Rural India</p>
   </footer>
 
-  <script src="js/api.js?v=3.9.0"></script>
-  <script src="js/i18n.js?v=3.9.0"></script>
-  <script src="js/offline.js?v=3.9.0"></script>
-  <script src="js/auth.js?v=3.9.0"></script>
+  <script src="js/api.js?v=3.9.5"></script>
+  <script src="js/i18n.js?v=3.9.5"></script>
+  <script src="js/offline.js?v=3.9.5"></script>
+  <script src="js/auth.js?v=3.9.5"></script>
 </body>
 </html>

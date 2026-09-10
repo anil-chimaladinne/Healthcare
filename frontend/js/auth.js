@@ -60,6 +60,15 @@ function requireAuth() {
  * Redirect already authenticated users from login page to their dedicated role workspace
  */
 function redirectIfLoggedIn() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const tab = urlParams.get("tab");
+  const force = urlParams.get("force");
+
+  // If user explicitly navigated with a tab or forced entry, do not auto-redirect
+  if (tab === "register" || tab === "login" || force === "true") {
+    return;
+  }
+
   const user = getCurrentUser();
   if (user && user.role) {
     if (user.role.includes("Health Worker") || user.role.includes("ASHA")) {
@@ -376,6 +385,38 @@ document.addEventListener("DOMContentLoaded", () => {
   const loginButton = document.getElementById("btn-submit-login");
   const registerButton = document.getElementById("btn-submit-register");
 
+  // Handle URL query parameters for direct tab selection (?tab=register or ?tab=login)
+  if (loginForm || registerForm) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const requestedTab = urlParams.get("tab");
+
+    if (requestedTab === "register") {
+      switchAuthTab("register");
+    } else {
+      switchAuthTab("login");
+      redirectIfLoggedIn();
+    }
+
+    // Display active session notice banner if user is currently logged in
+    const activeUser = getCurrentUser();
+    const sessionNotice = document.getElementById("active-session-notice");
+    if (activeUser && sessionNotice) {
+      sessionNotice.style.display = "block";
+      const sessionUserText = document.getElementById("active-session-user-text");
+      if (sessionUserText) {
+        sessionUserText.textContent = `${activeUser.name} (${activeUser.role})`;
+      }
+      const continueBtn = document.getElementById("btn-continue-workspace");
+      if (continueBtn) {
+        let dest = "dashboard.html";
+        if (activeUser.role.includes("Health Worker") || activeUser.role.includes("ASHA")) dest = "patient.html";
+        else if (activeUser.role.includes("Specialist")) dest = "specialist.html";
+        else if (activeUser.role.includes("Doctor")) dest = "doctor.html";
+        continueBtn.href = dest;
+      }
+    }
+  }
+
   // Helper alerts
   function showError(msg) {
     if (successAlert) successAlert.style.display = "none";
@@ -397,8 +438,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --- 1. LOGIN FORM HANDLER ---
   if (loginForm) {
-    redirectIfLoggedIn();
-
     loginForm.addEventListener("submit", async (event) => {
       event.preventDefault();
 

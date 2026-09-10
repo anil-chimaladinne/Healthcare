@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=3.9.0">
+  <link rel="stylesheet" href="css/style.css?v=3.9.5">
 </head>
 <body class="page-landing">
 
@@ -70,18 +70,24 @@
         </p>
 
         <!-- Quick Action Primary Buttons -->
-        <div style="display: flex; flex-direction: column; align-items: center; gap: 0.85rem; margin-bottom: 2rem;">
-          <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
-            <a href="login.html" class="btn btn-primary" style="padding: 0.75rem 1.75rem; font-weight: 700;">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 0.85rem; margin-bottom: 2rem; width: 100%; max-width: 520px; margin-left: auto; margin-right: auto;">
+          <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; width: 100%;">
+            <a href="login.html?tab=login" class="btn btn-primary" style="padding: 0.75rem 1.5rem; font-weight: 700; flex: 1; min-width: 170px; text-align: center;">
               🚀 Open All Workspaces &rarr;
             </a>
-            <button class="btn btn-install-app" onclick="triggerPWAInstall()" style="padding: 0.75rem 1.25rem;">
+            <button class="btn btn-install-app" onclick="triggerPWAInstall()" style="padding: 0.75rem 1.25rem; flex: 1; min-width: 150px;">
               📲 Install PWA App
             </button>
           </div>
-          <a href="login.html" class="btn" style="padding: 0.75rem 1.85rem; font-weight: 700; background: linear-gradient(135deg, #f97316, #ea580c); color: #ffffff; border-radius: 9999px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 14px rgba(234, 88, 12, 0.35); font-size: 1rem; border: none;">
-            🔑 Sign In / Create Account &rarr;
-          </a>
+          
+          <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; width: 100%;">
+            <a href="login.html?tab=login" class="btn" style="flex: 1; min-width: 140px; padding: 0.75rem 1.25rem; font-weight: 700; background: linear-gradient(135deg, #f97316, #ea580c); color: #ffffff; border-radius: 9999px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; box-shadow: 0 4px 14px rgba(234, 88, 12, 0.35); font-size: 0.95rem; border: none;">
+              🔐 Sign In
+            </a>
+            <a href="login.html?tab=register" class="btn" style="flex: 1; min-width: 150px; padding: 0.75rem 1.25rem; font-weight: 700; background: #ffffff; color: #ea580c; border: 2px solid #ea580c; border-radius: 9999px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; box-shadow: 0 2px 8px rgba(234, 88, 12, 0.15); font-size: 0.95rem;">
+              📝 Create Account
+            </a>
+          </div>
         </div>
 
       </div>
@@ -316,9 +322,9 @@
     <p>&copy; 2026 <strong>SevaHealth</strong> &bull; Offline-First Smart Healthcare for Rural India</p>
   </footer>
 
-  <script src="js/api.js?v=3.9.0"></script>
-  <script src="js/i18n.js?v=3.9.0"></script>
-  <script src="js/offline.js?v=3.9.0"></script>
-  <script src="js/auth.js?v=3.9.0"></script>
+  <script src="js/api.js?v=3.9.5"></script>
+  <script src="js/i18n.js?v=3.9.5"></script>
+  <script src="js/offline.js?v=3.9.5"></script>
+  <script src="js/auth.js?v=3.9.5"></script>
 </body>
 </html>
