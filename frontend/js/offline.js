@@ -10,6 +10,18 @@ let dbInstance = null;
 
 // Register Service Worker for true browser offline caching with auto-update
 if ("serviceWorker" in navigator && window.location.protocol.startsWith("http")) {
+  // Proactively purge old caches so mobile devices instantly load fresh orange logo assets
+  if ("caches" in window) {
+    caches.keys().then((keys) => {
+      keys.forEach((key) => {
+        if (key !== "sevahealth-v3.8.0-orange-theme") {
+          console.log("[ServiceWorker] Purging old cache:", key);
+          caches.delete(key);
+        }
+      });
+    });
+  }
+
   window.addEventListener("load", () => {
     navigator.serviceWorker
       .register("/service-worker.js")

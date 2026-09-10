@@ -177,12 +177,12 @@ a:hover {
    Header & Top Navigation
    -------------------------------------------------------------------------- */
 .site-header {
-  background: #ffffff url('../images/header-banner.jpg') no-repeat right center / cover;
-  border-bottom: 2px solid #0d9488;
+  background: #ffffff url('../images/header-banner.jpg?v=3.8.0') no-repeat right center / cover;
+  border-bottom: 2px solid #ea580c;
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 2px 12px rgba(13, 148, 136, 0.1);
+  box-shadow: 0 2px 12px rgba(234, 88, 12, 0.15);
   min-height: 52px;
   display: flex;
   align-items: center;
@@ -213,22 +213,22 @@ a:hover {
 .brand-icon {
   width: 38px;
   height: 38px;
-  background: linear-gradient(135deg, #f97316, #ea580c);
-  color: var(--white);
+  background: linear-gradient(135deg, #f97316, #ea580c) !important;
+  color: #ffffff !important;
   border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.35rem;
   font-weight: 800;
-  box-shadow: 0 2px 8px rgba(234, 88, 12, 0.35);
+  box-shadow: 0 2px 8px rgba(234, 88, 12, 0.4) !important;
   flex-shrink: 0;
 }
 
 .brand-text h1 {
   font-size: 1.2rem;
   font-weight: 800;
-  color: #0f766e;
+  color: #0f172a;
   line-height: 1.1;
   letter-spacing: -0.02em;
   margin: 0;
