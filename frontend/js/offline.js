@@ -607,27 +607,27 @@ async function updateLocalRecordsWithMapping(mapping) {
  * Update the Topbar Network and Sync status badges
  */
 async function updateNetworkStatusUI() {
-  const netBadge = document.getElementById("network-status-badge");
-  const offlineToggleBtn = document.getElementById("btn-toggle-offline-demo");
+  const netBadges = document.querySelectorAll("#network-status-badge, .network-status-badge, #mobile-network-status-badge");
+  const offlineToggleBtns = document.querySelectorAll("#btn-toggle-offline-demo, .btn-toggle-offline-demo, #mobile-btn-toggle-offline");
 
   const online = isAppOnline();
 
-  if (netBadge) {
+  netBadges.forEach((netBadge) => {
     if (online) {
       netBadge.className = "badge badge-status-online";
       netBadge.innerHTML = `<span class="badge-status-dot status-online"></span> <span>ONLINE</span>`;
       netBadge.title = "Connected to central PHC server";
     } else {
       netBadge.className = "badge badge-status-offline";
-      netBadge.innerHTML = `<span class="badge-status-dot status-offline"></span> <span>OFFLINE MODE</span>`;
+      netBadge.innerHTML = `<span class="badge-status-dot status-offline"></span> <span>OFFLINE</span>`;
       netBadge.title = "Offline: Data saved locally in IndexedDB";
     }
-  }
+  });
 
-  if (offlineToggleBtn) {
+  offlineToggleBtns.forEach((offlineToggleBtn) => {
     offlineToggleBtn.innerHTML = online ? "📡 Simulate Offline" : "📶 Go Online";
     offlineToggleBtn.className = online ? "btn btn-outline btn-sm" : "btn btn-primary btn-sm";
-  }
+  });
 
   await updateSyncStatusUI();
 }
@@ -636,33 +636,34 @@ async function updateNetworkStatusUI() {
  * Update the sync counter indicator
  */
 async function updateSyncStatusUI() {
-  const syncBadge = document.getElementById("sync-status-indicator");
+  const syncBadges = document.querySelectorAll("#sync-status-indicator, .sync-status-indicator, #mobile-sync-status-indicator");
   const syncCount = await getPendingSyncCount();
 
-  if (syncBadge) {
+  syncBadges.forEach((syncBadge) => {
     if (syncCount === 0) {
       syncBadge.innerHTML = `☁️ All synced`;
       syncBadge.className = "badge badge-primary";
     } else {
-      syncBadge.innerHTML = `⏳ ${syncCount} pending sync`;
+      syncBadge.innerHTML = `⏳ ${syncCount} pending`;
       syncBadge.className = "badge badge-warning";
     }
-  }
+  });
 
   const dashPendingEl = document.getElementById("stat-sync-pending");
   if (dashPendingEl) dashPendingEl.textContent = syncCount;
 }
 
 function setSyncBadgeState(state) {
-  const syncBadge = document.getElementById("sync-status-indicator");
-  if (!syncBadge) return;
-  if (state === "syncing") {
-    syncBadge.innerHTML = `🔄 Syncing...`;
-    syncBadge.className = "badge badge-warning";
-  } else if (state === "error") {
-    syncBadge.innerHTML = `⚠️ Sync paused`;
-    syncBadge.className = "badge badge-danger";
-  }
+  const syncBadges = document.querySelectorAll("#sync-status-indicator, .sync-status-indicator, #mobile-sync-status-indicator");
+  syncBadges.forEach((syncBadge) => {
+    if (state === "syncing") {
+      syncBadge.innerHTML = `🔄 Syncing...`;
+      syncBadge.className = "badge badge-warning";
+    } else if (state === "error") {
+      syncBadge.innerHTML = `⚠️ Sync paused`;
+      syncBadge.className = "badge badge-danger";
+    }
+  });
 }
 
 /**

@@ -53,6 +53,16 @@
   --shadow-lg: 0 14px 32px rgba(15, 23, 42, 0.12);
   --shadow-xl: 0 24px 44px rgba(15, 23, 42, 0.16);
   --transition: all 0.2s ease-in-out;
+  --bottom-nav-height: 60px;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-top: env(safe-area-inset-top, 0px);
+}
+
+html {
+  box-sizing: border-box;
+  -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 *, *::before, *::after {
@@ -72,9 +82,13 @@ body {
   font-size: 16px;
   line-height: 1.6;
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100vw;
 }
 
 /* Page-Specific Relevant Healthcare Backgrounds */
@@ -95,6 +109,7 @@ body.page-login {
   background-repeat: no-repeat !important;
   background-attachment: fixed !important;
   min-height: 100vh !important;
+  min-height: 100dvh !important;
 }
 
 body.page-dashboard {
@@ -171,6 +186,7 @@ a:hover {
   min-height: 52px;
   display: flex;
   align-items: center;
+  width: 100%;
 }
 
 .header-container {
@@ -181,8 +197,7 @@ a:hover {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
-  flex-wrap: nowrap;
+  gap: 0.5rem;
 }
 
 .brand {
@@ -211,7 +226,7 @@ a:hover {
 }
 
 .brand-text h1 {
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   font-weight: 800;
   color: #0f766e;
   line-height: 1.1;
@@ -220,7 +235,7 @@ a:hover {
 }
 
 .brand-text span {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 600;
   color: #334155;
   display: block;
@@ -232,7 +247,6 @@ a:hover {
   display: flex;
   align-items: center;
   gap: 0.35rem;
-  flex-wrap: nowrap;
   background: rgba(255, 255, 255, 0.88);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -240,7 +254,6 @@ a:hover {
   border-radius: 9999px;
   border: 1px solid rgba(255, 255, 255, 0.95);
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
-  flex-shrink: 0;
 }
 
 /* --------------------------------------------------------------------------
@@ -803,24 +816,6 @@ a:hover {
 .flow-arrow { color: var(--primary); font-size: 1.4rem; font-weight: 800; }
 
 /* --------------------------------------------------------------------------
-   Media Queries (Mobile & Tablet)
-   -------------------------------------------------------------------------- */
-@media (max-width: 850px) {
-  .app-layout { flex-direction: column; }
-  .app-sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--slate-200); }
-  .sidebar-nav { flex-direction: row; overflow-x: auto; padding: 0.65rem; white-space: nowrap; }
-  .cards-grid { grid-template-columns: repeat(2, 1fr); }
-  .header-container { flex-direction: column; align-items: stretch; }
-  .header-controls { justify-content: space-between; }
-}
-
-@media (max-width: 480px) {
-  .cards-grid { grid-template-columns: 1fr; }
-  .flow-diagram { flex-direction: column; }
-  .flow-arrow { transform: rotate(90deg); }
-}
-
-/* --------------------------------------------------------------------------
    Specialist Portal & Comprehensive Longitudinal EHR Components
    -------------------------------------------------------------------------- */
 .card-specialist {
@@ -1020,7 +1015,7 @@ body.page-login #lang-select {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2.5rem 1rem;
+  padding: 2rem 1rem;
 }
 
 .login-card {
@@ -1032,7 +1027,7 @@ body.page-login #lang-select {
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.6);
   box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35), 0 0 35px rgba(13, 148, 136, 0.2);
-  padding: 2rem 2.25rem;
+  padding: 2rem 1.75rem;
   transition: max-width 0.25s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -1184,44 +1179,385 @@ body.page-login footer {
   color: rgba(255, 255, 255, 0.75) !important;
 }
 
-/* Guaranteed Single-Row Compact Header Fix */
-.site-header {
-  min-height: 52px !important;
-  max-height: 62px !important;
-  padding: 0 !important;
+/* --------------------------------------------------------------------------
+   Mobile Header Quick Action Button & Mobile Actions Drawer / Sheet
+   -------------------------------------------------------------------------- */
+.btn-mobile-menu {
+  display: none;
+  background: #0d9488;
+  color: #ffffff;
+  border: none;
+  border-radius: 9999px;
+  width: 34px;
+  height: 34px;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(13, 148, 136, 0.3);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
 }
 
-.site-header .header-container {
-  min-height: 52px !important;
-  padding: 0.25rem 1.25rem !important;
-  display: flex !important;
-  flex-direction: row !important;
-  flex-wrap: nowrap !important;
-  align-items: center !important;
-  justify-content: space-between !important;
+.btn-mobile-menu:hover, .btn-mobile-menu:active {
+  background: #0f766e;
+  transform: scale(1.05);
 }
 
-.site-header .header-controls {
-  display: flex !important;
-  flex-direction: row !important;
-  flex-wrap: nowrap !important;
-  align-items: center !important;
-  gap: 0.35rem !important;
-  padding: 0.15rem 0.45rem !important;
-  max-width: fit-content !important;
+.mobile-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
 }
 
-.site-header #lang-select {
-  display: inline-block !important;
-  width: auto !important;
-  max-width: 110px !important;
-  height: 28px !important;
-  min-height: 28px !important;
-  padding: 0 0.5rem !important;
-  font-size: 0.75rem !important;
-  flex: 0 0 auto !important;
-  margin: 0 !important;
+.mobile-drawer-backdrop.active {
+  opacity: 1;
+  visibility: visible;
 }
+
+.mobile-actions-drawer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.25);
+  z-index: 1001;
+  padding: 1.25rem 1.25rem calc(1.5rem + env(safe-area-inset-bottom, 0px));
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+.mobile-actions-drawer.active {
+  transform: translateY(0);
+}
+
+.mobile-drawer-handle {
+  width: 44px;
+  height: 5px;
+  background: #cbd5e1;
+  border-radius: 9999px;
+  margin: 0 auto 1.25rem;
+}
+
+.mobile-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--slate-200);
+}
+
+.mobile-drawer-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--slate-900);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.mobile-drawer-close {
+  background: var(--slate-100);
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 1.25rem;
+  color: var(--slate-600);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-drawer-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.mobile-drawer-user-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--slate-50);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1rem;
+}
+
+/* --------------------------------------------------------------------------
+   Native App Bottom Navigation Bar (Amazon / Play Store Style)
+   -------------------------------------------------------------------------- */
+.mobile-bottom-nav {
+  display: none;
+}
+
+/* --------------------------------------------------------------------------
+   Comprehensive Media Queries for Android, iOS & Mobile Screens
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  /* Viewport and App layout reset */
+  body {
+    padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  .app-layout {
+    flex-direction: column;
+    min-height: auto;
+  }
+
+  .app-sidebar {
+    display: none !important;
+  }
+
+  .app-main-content {
+    padding: 1rem 0.85rem 2rem !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  /* Compact Native Top App Bar */
+  .site-header {
+    min-height: 52px;
+    padding: 0;
+  }
+
+  .header-container {
+    padding: 0.35rem 0.75rem;
+  }
+
+  .brand-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+  }
+
+  .brand-text h1 {
+    font-size: 1.05rem;
+  }
+
+  .brand-text span {
+    font-size: 0.65rem;
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Hide Desktop-only Header Buttons on Mobile */
+  .desktop-only-header {
+    display: none !important;
+  }
+
+  .btn-mobile-menu {
+    display: flex !important;
+  }
+
+  .header-controls {
+    padding: 0.15rem 0.35rem;
+    gap: 0.35rem;
+  }
+
+  #lang-select {
+    font-size: 0.75rem !important;
+    padding: 0.2rem 0.45rem !important;
+    min-height: 30px !important;
+    max-width: 85px !important;
+  }
+
+  /* Native Mobile Bottom Navigation Bar */
+  .mobile-bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px));
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background: rgba(255, 255, 255, 0.97);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(226, 232, 240, 0.95);
+    box-shadow: 0 -4px 20px rgba(15, 23, 42, 0.08);
+    z-index: 990;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .mobile-nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: var(--slate-500);
+    padding: 4px 2px 6px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    transition: all 0.15s ease;
+    position: relative;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-nav-icon {
+    font-size: 1.25rem;
+    line-height: 1.2;
+    margin-bottom: 2px;
+    transition: transform 0.2s ease;
+  }
+
+  .mobile-nav-label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 68px;
+    text-align: center;
+  }
+
+  .mobile-nav-item.active {
+    color: var(--primary-dark);
+    font-weight: 800;
+  }
+
+  .mobile-nav-item.active .mobile-nav-icon {
+    transform: translateY(-2px) scale(1.12);
+  }
+
+  .mobile-nav-item.active::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 26px;
+    height: 3px;
+    background: var(--primary);
+    border-radius: 0 0 4px 4px;
+  }
+
+  /* Responsive Cards & Metric Grids */
+  .cards-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.75rem !important;
+  }
+
+  .stat-card {
+    padding: 1rem !important;
+  }
+
+  .stat-value {
+    font-size: 1.85rem !important;
+  }
+
+  .welcome-banner {
+    padding: 1.25rem 1rem !important;
+    gap: 0.75rem !important;
+  }
+
+  .welcome-banner h2 {
+    font-size: 1.15rem !important;
+  }
+
+  /* Touch-friendly Form Inputs & Buttons */
+  .form-input, .form-select, .form-textarea {
+    font-size: 16px !important; /* Prevents auto-zoom on iOS Safari/Chrome */
+    min-height: 48px !important;
+  }
+
+  .btn {
+    min-height: 46px;
+    font-size: 0.95rem;
+  }
+
+  .btn-block-mobile {
+    width: 100% !important;
+  }
+
+  /* Flow Diagram on Landing Page */
+  .flow-diagram {
+    flex-direction: column !important;
+    gap: 0.5rem !important;
+  }
+
+  .flow-arrow {
+    transform: rotate(90deg) !important;
+    margin: 0.15rem 0 !important;
+  }
+
+  .flow-step {
+    width: 100% !important;
+    justify-content: center !important;
+    padding: 0.75rem 1rem !important;
+  }
+
+  /* Responsive Data Tables with Touch Momentum Scroll */
+  .table-responsive {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    border-radius: var(--radius-md) !important;
+    box-shadow: var(--shadow-xs);
+  }
+
+  .data-table {
+    min-width: 540px !important;
+  }
+
+  .data-table th, .data-table td {
+    padding: 0.75rem 0.65rem !important;
+    font-size: 0.85rem !important;
+    white-space: normal !important;
+  }
+
+  /* Doctor & Referral Queue Cards */
+  .doctor-queue-card {
+    padding: 1rem !important;
+  }
+
+  .queue-card-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  /* Modal Cards */
+  .modal-card {
+    padding: 1.25rem 1rem !important;
+    max-height: 94vh !important;
+    border-radius: 16px !important;
+    margin: 0.5rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .cards-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .role-select-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .login-card {
+    padding: 1.5rem 1.15rem !important;
+    border-radius: 16px !important;
+  }
+}
+
 
 
 

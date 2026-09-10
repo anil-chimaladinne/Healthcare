@@ -99,7 +99,7 @@ function setupGlobalHeader(user) {
   if (!user) return;
 
   // 1. Setup Universal Logout Buttons
-  const logoutButtons = document.querySelectorAll("#btn-logout, .btn-logout, [data-action='logout']");
+  const logoutButtons = document.querySelectorAll("#btn-logout, .btn-logout, [data-action='logout'], #btn-mobile-logout");
   logoutButtons.forEach((btn) => {
     btn.onclick = (e) => {
       e.preventDefault();
@@ -107,37 +107,69 @@ function setupGlobalHeader(user) {
     };
   });
 
-  // 2. Render User Role Badge if present
-  const userRoleEl = document.getElementById("user-role-badge");
-  if (userRoleEl) {
-    let icon = "👷";
-    let roleClass = "badge-healthworker";
-    let roleName = user.role || "Health Worker";
+  // 2. Render User Role Badge if present (Desktop & Mobile Drawer)
+  const userRoleEls = document.querySelectorAll("#user-role-badge, #mobile-user-role-badge");
+  let icon = "👷";
+  let roleClass = "badge-healthworker";
+  let roleName = user.role || "Health Worker";
 
-    if (user.role.includes("Specialist")) {
-      icon = "🩺";
-      roleClass = "badge-specialist";
-    } else if (user.role.includes("Doctor")) {
-      icon = "👨‍⚕️";
-      roleClass = "badge-doctor";
-    } else if (user.role.includes("Admin")) {
-      icon = "⚙️";
-      roleClass = "badge-admin";
-    } else {
-      icon = "👷";
-      roleClass = "badge-healthworker";
-      roleName = "Health Worker";
-    }
-
-    userRoleEl.innerHTML = `<span>${icon}</span> <span>${roleName}</span>`;
-    userRoleEl.className = `badge ${roleClass}`;
+  if (user.role && user.role.includes("Specialist")) {
+    icon = "🩺";
+    roleClass = "badge-specialist";
+  } else if (user.role && user.role.includes("Doctor")) {
+    icon = "👨‍⚕️";
+    roleClass = "badge-doctor";
+  } else if (user.role && user.role.includes("Admin")) {
+    icon = "⚙️";
+    roleClass = "badge-admin";
+  } else {
+    icon = "👷";
+    roleClass = "badge-healthworker";
+    roleName = "Health Worker";
   }
+
+  userRoleEls.forEach((el) => {
+    el.innerHTML = `<span>${icon}</span> <span>${roleName}</span>`;
+    el.className = `badge ${roleClass}`;
+  });
 
   // 3. Render User Name if present
-  const userNameEl = document.getElementById("user-name-display");
-  if (userNameEl) {
-    userNameEl.textContent = user.name || user.username;
+  const userNameEls = document.querySelectorAll("#user-name-display, #banner-user-name, #mobile-user-name");
+  userNameEls.forEach((el) => {
+    el.textContent = user.name || user.username;
+  });
+
+  // 4. Setup Mobile Drawer Trigger & Backdrop
+  const mobileMenuBtn = document.getElementById("btn-mobile-menu");
+  const mobileDrawer = document.getElementById("mobile-actions-drawer");
+  const drawerBackdrop = document.getElementById("mobile-drawer-backdrop");
+  const drawerCloseBtn = document.getElementById("mobile-drawer-close");
+
+  function openDrawer() {
+    if (mobileDrawer) mobileDrawer.classList.add("active");
+    if (drawerBackdrop) drawerBackdrop.classList.add("active");
   }
+
+  function closeDrawer() {
+    if (mobileDrawer) mobileDrawer.classList.remove("active");
+    if (drawerBackdrop) drawerBackdrop.classList.remove("active");
+  }
+
+  if (mobileMenuBtn) mobileMenuBtn.onclick = openDrawer;
+  if (drawerCloseBtn) drawerCloseBtn.onclick = closeDrawer;
+  if (drawerBackdrop) drawerBackdrop.onclick = closeDrawer;
+
+  // 5. Highlight active tab in Mobile Bottom Navigation
+  const curPath = (window.location.pathname || "").toLowerCase();
+  const bottomNavItems = document.querySelectorAll(".mobile-bottom-nav .mobile-nav-item");
+  bottomNavItems.forEach((item) => {
+    const href = (item.getAttribute("href") || "").toLowerCase();
+    if (curPath.endsWith(href) || (href === "dashboard.html" && curPath.endsWith("/"))) {
+      item.classList.add("active");
+    } else {
+      item.classList.remove("active");
+    }
+  });
 }
 
 /**

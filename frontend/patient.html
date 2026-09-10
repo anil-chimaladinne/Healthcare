@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Patients & Doorstep Visit - SevaHealth</title>
   <meta name="description" content="Frontline ASHA doorstep patient registration, vitals, smart triage, and longitudinal records.">
   <link rel="manifest" href="manifest.json">
@@ -16,7 +16,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="page-patient">
+<body class="page-patient has-bottom-nav">
 
   <!-- Top Navigation Header -->
   <header class="site-header">
@@ -35,24 +35,30 @@
           <option value="te">🌐 తెలుగు</option>
         </select>
 
-        <button id="btn-install-pwa" class="btn btn-outline btn-sm btn-pwa-pill" onclick="triggerPWAInstall()" title="Install SevaHealth App for offline use">
-          <span>✓</span> <span data-i18n="app_installed">Installed</span>
-        </button>
-
-        <button id="btn-toggle-offline-demo" class="btn btn-outline btn-sm" onclick="toggleSimulatedOffline()">
-          📡 Simulate Offline
-        </button>
-
         <span id="network-status-badge" class="badge badge-status-online">
           <span class="badge-status-dot status-online"></span>
           <span>ONLINE</span>
         </span>
 
-        <span id="sync-status-indicator" class="badge badge-primary">☁️ All synced</span>
-        <button id="btn-sync-now" class="btn btn-primary btn-sm" onclick="syncPendingRecords()" data-i18n="sync_now">🔄 Sync Now</button>
+        <div class="desktop-only-header" style="display: inline-flex; align-items: center; gap: 0.35rem;">
+          <button id="btn-install-pwa" class="btn btn-outline btn-sm btn-pwa-pill" onclick="triggerPWAInstall()" title="Install SevaHealth App for offline use">
+            <span>✓</span> <span data-i18n="app_installed">Installed</span>
+          </button>
 
-        <span id="user-role-badge" class="badge badge-healthworker">👷 Health Worker</span>
-        <button id="btn-logout" class="btn btn-danger-outline btn-sm" onclick="logout()" data-i18n="sign_out">↪ Sign Out</button>
+          <button id="btn-toggle-offline-demo" class="btn btn-outline btn-sm" onclick="toggleSimulatedOffline()">
+            📡 Simulate Offline
+          </button>
+
+          <span id="sync-status-indicator" class="badge badge-primary">☁️ All synced</span>
+          <button id="btn-sync-now" class="btn btn-primary btn-sm" onclick="syncPendingRecords()" data-i18n="sync_now">🔄 Sync Now</button>
+
+          <span id="user-role-badge" class="badge badge-healthworker">👷 Health Worker</span>
+          <button id="btn-logout" class="btn btn-danger-outline btn-sm" onclick="logout()" data-i18n="sign_out">↪ Sign Out</button>
+        </div>
+
+        <button id="btn-mobile-menu" class="btn-mobile-menu" aria-label="Open Actions Menu">
+          <span>☰</span>
+        </button>
       </div>
     </div>
   </header>
@@ -300,6 +306,76 @@
       <pre id="fhir-json-code" style="background: #0f172a; color: #38bdf8; padding: 1rem; border-radius: var(--radius-md); font-size: 0.75rem; overflow-x: auto; max-height: 400px; font-family: monospace;"></pre>
     </div>
   </div>
+
+  <!-- Mobile Actions Drawer & Backdrop -->
+  <div id="mobile-drawer-backdrop" class="mobile-drawer-backdrop"></div>
+  <div id="mobile-actions-drawer" class="mobile-actions-drawer">
+    <div class="mobile-drawer-handle"></div>
+    <div class="mobile-drawer-header">
+      <div class="mobile-drawer-title">
+        <span>✚</span> <span>SevaHealth Quick Actions</span>
+      </div>
+      <button id="mobile-drawer-close" class="mobile-drawer-close">&times;</button>
+    </div>
+    <div class="mobile-drawer-body">
+      <div class="mobile-drawer-user-card">
+        <div>
+          <strong id="mobile-user-name" style="display: block; font-size: 0.95rem; color: var(--slate-900);">User</strong>
+          <span id="mobile-user-role-badge" class="badge badge-healthworker" style="margin-top: 0.25rem;">👷 Health Worker</span>
+        </div>
+        <span id="mobile-network-status-badge" class="badge badge-status-online">
+          <span class="badge-status-dot status-online"></span>
+          <span>ONLINE</span>
+        </span>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+        <button id="mobile-btn-toggle-offline" class="btn btn-outline btn-sm btn-block" onclick="toggleSimulatedOffline()">
+          📡 Simulate Offline
+        </button>
+        <button id="mobile-btn-sync-now" class="btn btn-primary btn-sm btn-block" onclick="syncPendingRecords()">
+          🔄 Sync Now
+        </button>
+      </div>
+
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.65rem 0.85rem; background: var(--slate-50); border: 1px solid var(--slate-200); border-radius: var(--radius-md);">
+        <span style="font-size: 0.85rem; font-weight: 600; color: var(--slate-600);">Offline Sync Queue:</span>
+        <span id="mobile-sync-status-indicator" class="badge badge-primary">☁️ All synced</span>
+      </div>
+
+      <button class="btn btn-install-app btn-block" onclick="triggerPWAInstall()">
+        <span>📲</span> <span data-i18n="btn_install_app">Install SevaHealth App</span>
+      </button>
+
+      <button id="btn-mobile-logout" class="btn btn-danger-outline btn-block" onclick="logout()" data-i18n="sign_out">
+        ↪ Sign Out
+      </button>
+    </div>
+  </div>
+
+  <!-- Native Mobile Bottom Navigation Bar -->
+  <nav class="mobile-bottom-nav">
+    <a href="dashboard.html" class="mobile-nav-item">
+      <span class="mobile-nav-icon">📊</span>
+      <span class="mobile-nav-label" data-i18n="nav_dashboard">Dashboard</span>
+    </a>
+    <a href="patient.html" class="mobile-nav-item active">
+      <span class="mobile-nav-icon">🏡</span>
+      <span class="mobile-nav-label" data-i18n="nav_patients">Patients</span>
+    </a>
+    <a href="doctor.html" class="mobile-nav-item">
+      <span class="mobile-nav-icon">🩺</span>
+      <span class="mobile-nav-label" data-i18n="nav_doctor_queue">Doctor</span>
+    </a>
+    <a href="referrals.html" class="mobile-nav-item">
+      <span class="mobile-nav-icon">🚑</span>
+      <span class="mobile-nav-label" data-i18n="nav_referrals">Referrals</span>
+    </a>
+    <a href="followups.html" class="mobile-nav-item">
+      <span class="mobile-nav-icon">📋</span>
+      <span class="mobile-nav-label" data-i18n="nav_followups">Follow-ups</span>
+    </a>
+  </nav>
 
   <!-- Scripts -->
   <script src="js/api.js"></script>
