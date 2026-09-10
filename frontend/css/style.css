@@ -510,15 +510,56 @@ a:hover {
 .btn-sm { min-height: 38px; padding: 0.35rem 0.9rem; font-size: 0.875rem; }
 .btn-block { width: 100%; }
 
-.form-group { margin-bottom: 1.25rem; }
-.form-label { display: block; font-size: 0.95rem; font-weight: 700; color: var(--slate-800); margin-bottom: 0.4rem; }
+.form-group { margin-bottom: 1rem; }
+.form-label { display: block; font-size: 0.9rem; font-weight: 700; color: var(--slate-800); margin-bottom: 0.35rem; }
+
+.form-grid-demographics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  width: 100%;
+}
+
+.form-grid-vitals {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.doorstep-intake-card,
+.workspace-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--slate-200);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.table-scroll-hint {
+  display: none;
+  font-size: 0.75rem;
+  color: #0369a1;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 6px;
+  padding: 0.35rem 0.65rem;
+  margin-bottom: 0.5rem;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 600;
+}
 
 .form-input, .form-select, .form-textarea {
   width: 100%;
-  min-height: 46px;
-  padding: 0.68rem 0.95rem;
+  min-height: 44px;
+  padding: 0.6rem 0.85rem;
   font-family: inherit;
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: var(--slate-900);
   background: var(--slate-50);
   border: 1.5px solid var(--slate-300);
@@ -533,7 +574,7 @@ a:hover {
   box-shadow: 0 0 0 3.5px rgba(13, 148, 136, 0.18);
 }
 
-.form-textarea { min-height: 95px; resize: vertical; }
+.form-textarea { min-height: 90px; resize: vertical; }
 
 .voice-recording {
   background: #fee2e2 !important;
@@ -1532,15 +1573,34 @@ body.has-bottom-nav {
     font-size: 1.15rem !important;
   }
 
+  /* Responsive Form Grids on Mobile & Tablet */
+  .form-grid-demographics {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.65rem !important;
+  }
+
+  .form-grid-vitals {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.5rem !important;
+  }
+
+  .doorstep-intake-card,
+  .workspace-card {
+    padding: 1rem 0.85rem !important;
+    border-radius: var(--radius-md) !important;
+    margin-bottom: 1.25rem !important;
+  }
+
   /* Touch-friendly Form Inputs & Buttons */
   .form-input, .form-select, .form-textarea {
-    font-size: 16px !important; /* Prevents auto-zoom on iOS Safari/Chrome */
-    min-height: 48px !important;
+    font-size: 15px !important; /* Prevents auto-zoom on iOS Safari/Chrome */
+    min-height: 44px !important;
+    padding: 0.5rem 0.75rem !important;
   }
 
   .btn {
-    min-height: 46px;
-    font-size: 0.95rem;
+    min-height: 44px;
+    font-size: 0.9rem;
   }
 
   .btn-block-mobile {
@@ -1565,6 +1625,10 @@ body.has-bottom-nav {
   }
 
   /* Responsive Data Tables with Touch Momentum Scroll */
+  .table-scroll-hint {
+    display: flex !important;
+  }
+
   .table-responsive {
     width: 100% !important;
     max-width: 100% !important;
@@ -1572,27 +1636,59 @@ body.has-bottom-nav {
     -webkit-overflow-scrolling: touch !important;
     border-radius: var(--radius-md) !important;
     box-shadow: var(--shadow-xs);
+    margin-top: 0.5rem !important;
   }
 
   .data-table {
-    min-width: 540px !important;
+    min-width: 620px !important;
+    width: 100% !important;
   }
 
   .data-table th, .data-table td {
-    padding: 0.75rem 0.65rem !important;
-    font-size: 0.85rem !important;
+    padding: 0.65rem 0.6rem !important;
+    font-size: 0.825rem !important;
     white-space: normal !important;
+    word-break: break-word !important;
   }
 
   /* Doctor & Referral Queue Cards */
   .doctor-queue-card {
     padding: 1rem !important;
+    border-radius: var(--radius-md) !important;
   }
 
   .queue-card-top {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0.75rem !important;
+  }
+
+  .queue-patient-meta {
+    width: 100% !important;
+    justify-content: space-between !important;
+  }
+
+  .queue-actions {
+    width: 100% !important;
+  }
+
+  .queue-actions button,
+  .queue-actions .btn {
+    width: 100% !important;
+    text-align: center !important;
+    justify-content: center !important;
+  }
+
+  .queue-vitals-row {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.4rem !important;
+  }
+
+  .queue-vitals-row .v-pill {
+    padding: 0.35rem 0.5rem !important;
+    font-size: 0.8rem !important;
+    text-align: center !important;
   }
 
   /* Modal Cards */
@@ -1601,6 +1697,8 @@ body.has-bottom-nav {
     max-height: 94vh !important;
     border-radius: 16px !important;
     margin: 0.5rem !important;
+    width: calc(100% - 1rem) !important;
+    max-width: 100% !important;
   }
 }
 
@@ -1616,6 +1714,18 @@ body.has-bottom-nav {
   .login-card {
     padding: 1.5rem 1.15rem !important;
     border-radius: 16px !important;
+  }
+
+  .form-grid-demographics {
+    grid-template-columns: 1fr !important;
+  }
+
+  .form-grid-vitals {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .queue-vitals-row {
+    grid-template-columns: repeat(2, 1fr) !important;
   }
 }
 

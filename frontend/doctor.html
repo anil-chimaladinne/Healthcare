@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=3.9.5">
+  <link rel="stylesheet" href="css/style.css?v=4.1.0">
 </head>
 <body class="page-doctor">
 
@@ -105,7 +105,7 @@
     <main class="app-main-content">
 
       <!-- Header Title & Legend -->
-      <div style="background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--slate-200); padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: var(--shadow-xs);">
+      <div class="workspace-card">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
           <div>
             <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--slate-900);">
@@ -125,11 +125,11 @@
         </div>
 
         <!-- Doctor View Tabs -->
-        <div style="display: flex; gap: 0.75rem; margin-top: 1.25rem; border-top: 1px solid var(--slate-100); padding-top: 1rem;">
-          <button id="tab-waiting-queue" class="btn btn-primary btn-sm" onclick="switchDoctorTab('waiting')">
+        <div style="display: flex; gap: 0.75rem; margin-top: 1.25rem; border-top: 1px solid var(--slate-100); padding-top: 1rem; flex-wrap: wrap;">
+          <button id="tab-waiting-queue" class="btn btn-primary btn-sm" onclick="switchDoctorTab('waiting')" style="flex: 1; min-width: 160px;">
             ⏳ Waiting Patient Queue
           </button>
-          <button id="tab-completed-consults" class="btn btn-outline btn-sm" onclick="switchDoctorTab('completed')">
+          <button id="tab-completed-consults" class="btn btn-outline btn-sm" onclick="switchDoctorTab('completed')" style="flex: 1; min-width: 180px;">
             ✅ Completed Consultations &amp; Rx
           </button>
         </div>
@@ -143,10 +143,13 @@
       </div>
 
       <!-- Tab 2: Completed Consultations Table -->
-      <div id="doctor-completed-view" style="display: none; background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--slate-200); padding: 1.5rem; box-shadow: var(--shadow-xs);">
-        <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--slate-900); margin-bottom: 1rem;">
+      <div id="doctor-completed-view" class="workspace-card" style="display: none;">
+        <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--slate-900); margin-bottom: 0.85rem;">
           📋 Completed Doctor Consultations &amp; Prescriptions
         </h3>
+        <div class="table-scroll-hint">
+          <span>👆</span> <span>Swipe table horizontally to see full prescription &amp; consultation history</span>
+        </div>
         <div class="table-responsive">
           <table class="data-table">
             <thead>
@@ -374,10 +377,10 @@
 
 
   <!-- Scripts -->
-  <script src="js/api.js?v=4.0.0"></script>
-  <script src="js/i18n.js?v=4.0.0"></script>
-  <script src="js/offline.js?v=4.0.0"></script>
-  <script src="js/auth.js?v=4.0.0"></script>
-  <script src="js/doctor.js?v=4.0.0"></script>
+  <script src="js/api.js?v=4.1.0"></script>
+  <script src="js/i18n.js?v=4.1.0"></script>
+  <script src="js/offline.js?v=4.1.0"></script>
+  <script src="js/auth.js?v=4.1.0"></script>
+  <script src="js/doctor.js?v=4.1.0"></script>
 </body>
 </html>

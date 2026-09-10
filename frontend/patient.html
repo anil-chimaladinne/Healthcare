@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=3.9.5">
+  <link rel="stylesheet" href="css/style.css?v=4.1.0">
 </head>
 <body class="page-patient">
 
@@ -105,7 +105,7 @@
     <main class="app-main-content">
 
       <!-- Doorstep Intake Card -->
-      <div class="doorstep-intake-card" style="background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--slate-200); padding: 1.75rem; margin-bottom: 2rem; box-shadow: var(--shadow-sm);">
+      <div class="doorstep-intake-card">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.5rem;">
           <div>
             <h2 style="font-size: 1.35rem; font-weight: 800; color: var(--slate-900);">
@@ -131,7 +131,7 @@
 
         <form id="patient-intake-form">
           <!-- Demographic Section -->
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem;">
+          <div class="form-grid-demographics">
             <div class="form-group">
               <label for="p_name" class="form-label" data-i18n="name">Full Name *</label>
               <input type="text" id="p_name" class="form-input" placeholder="e.g. Ramesh Varma" required>
@@ -169,7 +169,7 @@
 
           <!-- Symptoms & Voice Section -->
           <div style="background: var(--slate-50); border: 1px solid var(--slate-200); border-radius: var(--radius-md); padding: 1.25rem; margin: 1rem 0;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
               <label for="p_symptoms" class="form-label" style="margin-bottom: 0;" data-i18n="symptoms_label">
                 Symptoms / Chief Complaints *
               </label>
@@ -209,7 +209,7 @@
               🩺 Vitals Signs Assessment (Frontline Device Inputs)
             </h4>
 
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.75rem;">
+            <div class="form-grid-vitals">
               <div class="form-group">
                 <label for="p_spo2" class="form-label">SpO2 (%) *</label>
                 <input type="number" id="p_spo2" class="form-input" placeholder="e.g. 96" min="50" max="100">
@@ -246,11 +246,11 @@
           <div id="live-triage-preview" style="display: none;"></div>
 
           <!-- Form Submit Buttons -->
-          <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem;">
-            <button type="button" id="btn-eval-triage" class="btn btn-outline" data-i18n="btn_run_triage">
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1rem;">
+            <button type="button" id="btn-eval-triage" class="btn btn-outline" data-i18n="btn_run_triage" style="flex: 1; min-width: 150px;">
               ⚡ Evaluate Smart Triage
             </button>
-            <button type="submit" id="btn-submit-patient" class="btn btn-primary" data-i18n="btn_save_offline">
+            <button type="submit" id="btn-submit-patient" class="btn btn-primary" data-i18n="btn_save_offline" style="flex: 1; min-width: 170px;">
               💾 Save Record (Offline / Online)
             </button>
           </div>
@@ -258,14 +258,18 @@
       </div>
 
       <!-- Patients Database Table Section -->
-      <div style="background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--slate-200); padding: 1.5rem; box-shadow: var(--shadow-xs);">
+      <div class="workspace-card">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 1rem;">
           <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--slate-900);">
             👥 Community Patient Directory
           </h3>
-          <div style="width: 280px;">
+          <div style="width: 280px; max-width: 100%;">
             <input type="text" id="search-patient-input" class="form-input" placeholder="Search by name, ID, village..." style="min-height: 38px;">
           </div>
+        </div>
+
+        <div class="table-scroll-hint">
+          <span>👆</span> <span>Swipe table horizontally to see all columns &amp; EHR records</span>
         </div>
 
         <div class="table-responsive">
@@ -390,11 +394,11 @@
 
 
   <!-- Scripts -->
-  <script src="js/api.js?v=4.0.0"></script>
-  <script src="js/i18n.js?v=4.0.0"></script>
-  <script src="js/offline.js?v=4.0.0"></script>
-  <script src="js/triage.js?v=4.0.0"></script>
-  <script src="js/auth.js?v=4.0.0"></script>
-  <script src="js/patient.js?v=4.0.0"></script>
+  <script src="js/api.js?v=4.1.0"></script>
+  <script src="js/i18n.js?v=4.1.0"></script>
+  <script src="js/offline.js?v=4.1.0"></script>
+  <script src="js/triage.js?v=4.1.0"></script>
+  <script src="js/auth.js?v=4.1.0"></script>
+  <script src="js/patient.js?v=4.1.0"></script>
 </body>
 </html>

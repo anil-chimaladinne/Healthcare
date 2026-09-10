@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=3.9.5">
+  <link rel="stylesheet" href="css/style.css?v=4.1.0">
 </head>
 <body class="page-specialist">
 
@@ -170,7 +170,7 @@
       </div>
 
       <!-- Inbound Referrals Directory Card -->
-      <div style="background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--slate-200); padding: 1.5rem; box-shadow: var(--shadow-xs);">
+      <div class="workspace-card">
         
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 1rem;">
           <div style="display: flex; align-items: center; gap: 0.75rem;">
@@ -181,25 +181,25 @@
           </div>
 
           <!-- Search & Filter Controls -->
-          <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
-            <div style="width: 280px;">
+          <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; width: 100%; max-width: 600px;">
+            <div style="flex: 1; min-width: 180px;">
               <input
                 type="text"
                 id="search-spec-input"
                 class="form-input"
-                placeholder="🔍 Search patient, ID, village, reason..."
+                placeholder="🔍 Search patient, ID, village..."
                 style="min-height: 38px;"
               >
             </div>
 
-            <select id="filter-spec-priority" class="form-select" style="min-height: 38px; width: auto;">
+            <select id="filter-spec-priority" class="form-select" style="min-height: 38px; width: auto; flex-shrink: 0;">
               <option value="">All Priorities</option>
               <option value="Emergency">🚨 Emergency Only</option>
               <option value="Priority">⚠️ Priority (24h)</option>
               <option value="Routine">Routine Elective</option>
             </select>
 
-            <select id="filter-spec-status" class="form-select" style="min-height: 38px; width: auto;">
+            <select id="filter-spec-status" class="form-select" style="min-height: 38px; width: auto; flex-shrink: 0;">
               <option value="">All Statuses</option>
               <option value="Sent">Sent / Incoming</option>
               <option value="Accepted">Accepted</option>
@@ -207,6 +207,10 @@
               <option value="Completed">Completed</option>
             </select>
           </div>
+        </div>
+
+        <div class="table-scroll-hint">
+          <span>👆</span> <span>Swipe table horizontally to see full clinical details and actions</span>
         </div>
 
         <!-- Inbound Table -->
@@ -412,10 +416,10 @@
 
 
   <!-- Scripts -->
-  <script src="js/api.js?v=4.0.0"></script>
-  <script src="js/i18n.js?v=4.0.0"></script>
-  <script src="js/offline.js?v=4.0.0"></script>
-  <script src="js/auth.js?v=4.0.0"></script>
-  <script src="js/specialist.js?v=4.0.0"></script>
+  <script src="js/api.js?v=4.1.0"></script>
+  <script src="js/i18n.js?v=4.1.0"></script>
+  <script src="js/offline.js?v=4.1.0"></script>
+  <script src="js/auth.js?v=4.1.0"></script>
+  <script src="js/specialist.js?v=4.1.0"></script>
 </body>
 </html>

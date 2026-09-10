@@ -3,7 +3,7 @@
  * Caches core application shell assets for offline rural use.
  */
 
-const CACHE_NAME = "sevahealth-v4.0.0-role-nav";
+const CACHE_NAME = "sevahealth-v4.1.0-responsive-fix";
 const ASSETS_TO_CACHE = [
   "/",
   "/index.html",
@@ -14,20 +14,20 @@ const ASSETS_TO_CACHE = [
   "/specialist.html",
   "/referrals.html",
   "/followups.html",
-  "/css/style.css?v=4.0.0",
+  "/css/style.css?v=4.1.0",
   "/images/login-bg.jpg",
-  "/images/header-banner.jpg?v=4.0.0",
-  "/js/api.js?v=4.0.0",
-  "/js/auth.js?v=4.0.0",
-  "/js/i18n.js?v=4.0.0",
-  "/js/offline.js?v=4.0.0",
-  "/js/triage.js?v=4.0.0",
-  "/js/dashboard.js?v=4.0.0",
-  "/js/patient.js?v=4.0.0",
-  "/js/doctor.js?v=4.0.0",
-  "/js/specialist.js?v=4.0.0",
-  "/js/referrals.js?v=4.0.0",
-  "/js/followups.js?v=4.0.0",
+  "/images/header-banner.jpg?v=4.1.0",
+  "/js/api.js?v=4.1.0",
+  "/js/auth.js?v=4.1.0",
+  "/js/i18n.js?v=4.1.0",
+  "/js/offline.js?v=4.1.0",
+  "/js/triage.js?v=4.1.0",
+  "/js/dashboard.js?v=4.1.0",
+  "/js/patient.js?v=4.1.0",
+  "/js/doctor.js?v=4.1.0",
+  "/js/specialist.js?v=4.1.0",
+  "/js/referrals.js?v=4.1.0",
+  "/js/followups.js?v=4.1.0",
   "/manifest.json",
   "/icons/icon-192.png",
   "/icons/icon-512.png",
@@ -48,7 +48,7 @@ self.addEventListener("install", (event) => {
   self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log("[Service Worker] Caching New Application Shell Assets v3.9.5");
+      console.log("[Service Worker] Caching New Application Shell Assets v4.1.0");
       return cache.addAll(ASSETS_TO_CACHE);
     }).catch((err) => console.warn("[Service Worker] Cache install notice:", err))
   );
