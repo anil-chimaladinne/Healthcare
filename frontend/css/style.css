@@ -1347,18 +1347,17 @@ body.page-login footer {
   }
 
   .brand-text h1 {
-    font-size: 1.05rem;
+    font-size: 1.1rem;
+    line-height: 1;
   }
 
   .brand-text span {
-    font-size: 0.65rem;
-    max-width: 140px;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    display: none !important; /* Hide long subtitle on mobile header to prevent crowding */
   }
 
-  /* Hide Desktop-only Header Buttons on Mobile */
-  .desktop-only-header {
+  /* Hide Desktop-only Header Buttons & redundant badges on Mobile */
+  .desktop-only-header,
+  #network-status-badge {
     display: none !important;
   }
 
@@ -1369,16 +1368,23 @@ body.page-login footer {
   .header-controls {
     padding: 0.15rem 0.35rem;
     gap: 0.35rem;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
   }
 
   #lang-select {
     font-size: 0.75rem !important;
     padding: 0.2rem 0.45rem !important;
-    min-height: 30px !important;
-    max-width: 85px !important;
+    min-height: 32px !important;
+    max-width: 82px !important;
   }
 
   /* Native Mobile Bottom Navigation Bar */
+  body.has-bottom-nav {
+    padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px) + 16px) !important;
+  }
+
   .mobile-bottom-nav {
     display: flex;
     position: fixed;

@@ -138,8 +138,12 @@ function setupGlobalHeader(user) {
   userNameEls.forEach((el) => {
     el.textContent = user.name || user.username;
   });
+}
 
-  // 4. Setup Mobile Drawer Trigger & Backdrop
+/**
+ * Universal Mobile Drawer & Bottom Navigation initialization (runs for all visitors & pages)
+ */
+function setupMobileDrawerAndNav() {
   const mobileMenuBtn = document.getElementById("btn-mobile-menu");
   const mobileDrawer = document.getElementById("mobile-actions-drawer");
   const drawerBackdrop = document.getElementById("mobile-drawer-backdrop");
@@ -155,16 +159,21 @@ function setupGlobalHeader(user) {
     if (drawerBackdrop) drawerBackdrop.classList.remove("active");
   }
 
-  if (mobileMenuBtn) mobileMenuBtn.onclick = openDrawer;
+  if (mobileMenuBtn) {
+    mobileMenuBtn.onclick = (e) => {
+      e.preventDefault();
+      openDrawer();
+    };
+  }
   if (drawerCloseBtn) drawerCloseBtn.onclick = closeDrawer;
   if (drawerBackdrop) drawerBackdrop.onclick = closeDrawer;
 
-  // 5. Highlight active tab in Mobile Bottom Navigation
+  // Highlight active tab in Mobile Bottom Navigation
   const curPath = (window.location.pathname || "").toLowerCase();
   const bottomNavItems = document.querySelectorAll(".mobile-bottom-nav .mobile-nav-item");
   bottomNavItems.forEach((item) => {
     const href = (item.getAttribute("href") || "").toLowerCase();
-    if (curPath.endsWith(href) || (href === "dashboard.html" && curPath.endsWith("/"))) {
+    if (curPath.endsWith(href) || (href === "index.html" && (curPath.endsWith("/") || curPath === ""))) {
       item.classList.add("active");
     } else {
       item.classList.remove("active");
@@ -351,6 +360,8 @@ window.handleRoleSelectionChange = handleRoleSelectionChange;
 
 // Attach login form, register form, and global auth listeners on DOMContentLoaded
 document.addEventListener("DOMContentLoaded", () => {
+  setupMobileDrawerAndNav();
+
   const user = getCurrentUser();
   if (user) {
     setupGlobalHeader(user);

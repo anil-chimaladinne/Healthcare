@@ -3,7 +3,7 @@
  * Caches core application shell assets for offline rural use.
  */
 
-const CACHE_NAME = "sevahealth-v3.5.0-mobile-nav";
+const CACHE_NAME = "sevahealth-v3.6.0-all-options";
 const ASSETS_TO_CACHE = [
   "/",
   "/index.html",
@@ -14,20 +14,20 @@ const ASSETS_TO_CACHE = [
   "/specialist.html",
   "/referrals.html",
   "/followups.html",
-  "/css/style.css?v=3.5.0",
+  "/css/style.css?v=3.6.0",
   "/images/login-bg.jpg",
   "/images/header-banner.jpg",
-  "/js/api.js?v=3.5.0",
-  "/js/auth.js?v=3.5.0",
-  "/js/i18n.js?v=3.5.0",
-  "/js/offline.js?v=3.5.0",
-  "/js/triage.js?v=3.5.0",
-  "/js/dashboard.js?v=3.5.0",
-  "/js/patient.js?v=3.5.0",
-  "/js/doctor.js?v=3.5.0",
-  "/js/specialist.js?v=3.5.0",
-  "/js/referrals.js?v=3.5.0",
-  "/js/followups.js?v=3.5.0",
+  "/js/api.js?v=3.6.0",
+  "/js/auth.js?v=3.6.0",
+  "/js/i18n.js?v=3.6.0",
+  "/js/offline.js?v=3.6.0",
+  "/js/triage.js?v=3.6.0",
+  "/js/dashboard.js?v=3.6.0",
+  "/js/patient.js?v=3.6.0",
+  "/js/doctor.js?v=3.6.0",
+  "/js/specialist.js?v=3.6.0",
+  "/js/referrals.js?v=3.6.0",
+  "/js/followups.js?v=3.6.0",
   "/manifest.json",
   "/icons/icon-192.png",
   "/icons/icon-512.png",
